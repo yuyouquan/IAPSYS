@@ -1,0 +1,397 @@
+import type { ChannelApplyFormData, MaterialFormData, ReviewRecord, ExternalPlatformData, GrayMonitorData } from '../../types/node';
+import type { AppVersion } from '../../types/app';
+
+/** 通道发布申请数据（按 appId 索引） */
+export const mockChannelApplyData: Record<string, ChannelApplyFormData> = {
+  'APP-001': {
+    publishPurpose: '新版本功能迭代，优化天气预报准确性',
+    appName: 'Weather Pro',
+    packageName: 'com.transsion.weather',
+    appType: 'Weather',
+    versionCode: 'v2.1.0',
+    apkUrl: 'https://cdn.transsion.com/apk/weather-pro-2.1.0.apk',
+    testReport: 'https://docs.transsion.com/test-report/weather-2.1.0',
+    appCategory: 'weather',
+    isSystemApp: true,
+    publishCountry: { type: 'include', values: ['NG', 'KE', 'TZ', 'GH', 'EG'] },
+    publishBrand: { type: 'all', values: [] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['X6841_H6941', 'X6838_H6939'] },
+    androidVersion: { type: 'include', values: ['13', '14', '15'] },
+    tosVersion: { type: 'include', values: ['tOS 13.0.0', 'tOS 14.1.0', 'tOS 15.1.0'] },
+    filterIndia: true,
+    isPaUpdate: false,
+    materials: [],
+    isGpPublish: true,
+    gpLink: 'https://play.google.com/store/apps/details?id=com.transsion.weather',
+  },
+  'APP-002': {
+    publishPurpose: '新增桌面小组件功能',
+    appName: 'HiOS Launcher',
+    packageName: 'com.transsion.launcher',
+    appType: 'Entertainment',
+    versionCode: 'v5.0.1',
+    apkUrl: 'https://cdn.transsion.com/apk/hios-launcher-5.0.1.apk',
+    testReport: '',
+    appCategory: 'entertainment',
+    isSystemApp: true,
+    publishCountry: { type: 'all', values: [] },
+    publishBrand: { type: 'include', values: ['Tecno', 'Infinix'] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['X6841_H6941', 'X6876_H8921'] },
+    androidVersion: { type: 'include', values: ['14', '15', '16'] },
+    tosVersion: { type: 'include', values: ['tOS 14.1.0', 'tOS 15.1.0', 'tOS 16.0.0'] },
+    filterIndia: false,
+    isPaUpdate: true,
+    grayScale: 30,
+    effectiveTimeRange: ['2026-03-15 00:00:00', '2026-03-22 23:59:59'],
+    materials: [],
+    isGpPublish: false,
+  },
+  'APP-003': {
+    publishPurpose: '应用商店功能升级，新增搜索推荐',
+    appName: 'Palm Store',
+    packageName: 'com.transsion.store',
+    appType: 'Shopping',
+    versionCode: 'v3.2.0',
+    apkUrl: 'https://cdn.transsion.com/apk/palm-store-3.2.0.apk',
+    testReport: 'https://docs.transsion.com/test-report/palm-store-3.2.0',
+    appCategory: 'shopping',
+    isSystemApp: true,
+    publishCountry: { type: 'include', values: ['NG', 'KE', 'TZ'] },
+    publishBrand: { type: 'all', values: [] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['X6841_H6941'] },
+    androidVersion: { type: 'include', values: ['13', '14'] },
+    tosVersion: { type: 'include', values: ['tOS 13.0.0', 'tOS 14.1.0'] },
+    filterIndia: false,
+    isPaUpdate: false,
+    materials: [],
+    isGpPublish: false,
+  },
+  'APP-004': {
+    publishPurpose: '金融安全合规升级',
+    appName: 'Smart Finance',
+    packageName: 'com.transsion.finance',
+    appType: 'Finance',
+    versionCode: 'v1.5.0',
+    apkUrl: 'https://cdn.transsion.com/apk/smart-finance-1.5.0.apk',
+    testReport: 'https://docs.transsion.com/test-report/finance-1.5.0',
+    appCategory: 'finance',
+    isSystemApp: false,
+    publishCountry: { type: 'include', values: ['NG', 'KE', 'GH', 'EG'] },
+    publishBrand: { type: 'include', values: ['Tecno'] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['KO5_H8925', 'X6841_H6941'] },
+    androidVersion: { type: 'include', values: ['14', '15'] },
+    tosVersion: { type: 'include', values: ['tOS 14.1.0', 'tOS 15.1.0'] },
+    filterIndia: true,
+    isPaUpdate: true,
+    grayScale: 20,
+    effectiveTimeRange: ['2026-03-10 00:00:00', '2026-03-20 23:59:59'],
+    materials: [],
+    isGpPublish: true,
+    gpLink: 'https://play.google.com/store/apps/details?id=com.transsion.finance',
+  },
+  'APP-005': {
+    publishPurpose: '教育内容平台重构',
+    appName: 'EDU Learn',
+    packageName: 'com.transsion.edu',
+    appType: 'Education',
+    versionCode: 'v4.0.0',
+    apkUrl: 'https://cdn.transsion.com/apk/edu-learn-4.0.0.apk',
+    testReport: '',
+    appCategory: 'education',
+    isSystemApp: false,
+    publishCountry: { type: 'all', values: [] },
+    publishBrand: { type: 'all', values: [] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['P682L_H8935'] },
+    androidVersion: { type: 'include', values: ['13', '14', '15'] },
+    tosVersion: { type: 'include', values: ['tOS 13.0.0', 'tOS 14.1.0', 'tOS 15.2.0'] },
+    filterIndia: false,
+    isPaUpdate: false,
+    materials: [],
+    isGpPublish: false,
+  },
+  'APP-006': {
+    publishPurpose: '健康管理功能首发',
+    appName: 'Smart Health',
+    packageName: 'com.transsion.health',
+    appType: 'Medical',
+    versionCode: 'v1.0.0',
+    apkUrl: 'https://cdn.transsion.com/apk/smart-health-1.0.0.apk',
+    testReport: 'https://docs.transsion.com/test-report/health-1.0.0',
+    appCategory: 'medical',
+    isSystemApp: false,
+    publishCountry: { type: 'include', values: ['NG', 'KE'] },
+    publishBrand: { type: 'include', values: ['Tecno', 'Infinix'] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['X6841_H6941', 'X6838_H6939'] },
+    androidVersion: { type: 'include', values: ['14', '15'] },
+    tosVersion: { type: 'include', values: ['tOS 14.1.0', 'tOS 15.1.0'] },
+    filterIndia: true,
+    isPaUpdate: false,
+    materials: [],
+    isGpPublish: false,
+  },
+  'APP-007': {
+    publishPurpose: '音乐播放器性能优化',
+    appName: 'Boomplay',
+    packageName: 'com.transsion.boomplay',
+    appType: 'Entertainment',
+    versionCode: 'v8.0.0',
+    apkUrl: 'https://cdn.transsion.com/apk/boomplay-8.0.0.apk',
+    testReport: 'https://docs.transsion.com/test-report/boomplay-8.0.0',
+    appCategory: 'entertainment',
+    isSystemApp: false,
+    publishCountry: { type: 'include', values: ['NG', 'KE', 'GH'] },
+    publishBrand: { type: 'all', values: [] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['KO5_H8925'] },
+    androidVersion: { type: 'include', values: ['14', '15'] },
+    tosVersion: { type: 'include', values: ['tOS 14.1.0', 'tOS 15.2.0'] },
+    filterIndia: true,
+    isPaUpdate: false,
+    materials: [],
+    isGpPublish: true,
+    gpLink: 'https://play.google.com/store/apps/details?id=com.transsion.boomplay',
+  },
+  'APP-008': {
+    publishPurpose: '浏览器内核升级',
+    appName: 'Phoenix Browser',
+    packageName: 'com.transsion.browser',
+    appType: 'Travel & Local',
+    versionCode: 'v6.2.0',
+    apkUrl: 'https://cdn.transsion.com/apk/phoenix-browser-6.2.0.apk',
+    testReport: 'https://docs.transsion.com/test-report/browser-6.2.0',
+    appCategory: 'travel_local',
+    isSystemApp: false,
+    publishCountry: { type: 'all', values: [] },
+    publishBrand: { type: 'all', values: [] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['X6876_H8921', 'X6841_H6941'] },
+    androidVersion: { type: 'include', values: ['13', '14', '15'] },
+    tosVersion: { type: 'include', values: ['tOS 13.0.0', 'tOS 14.1.0', 'tOS 15.1.0'] },
+    filterIndia: false,
+    isPaUpdate: false,
+    materials: [],
+    isGpPublish: true,
+    gpLink: 'https://play.google.com/store/apps/details?id=com.transsion.browser',
+  },
+  'APP-009': {
+    publishPurpose: '售后服务功能迭代',
+    appName: 'CarlCare',
+    packageName: 'com.transsion.carlcare',
+    appType: 'Business',
+    versionCode: 'v3.5.0',
+    apkUrl: 'https://cdn.transsion.com/apk/carlcare-3.5.0.apk',
+    testReport: '',
+    appCategory: 'business',
+    isSystemApp: false,
+    publishCountry: { type: 'include', values: ['NG', 'KE', 'TZ', 'GH'] },
+    publishBrand: { type: 'all', values: [] },
+    publishModel: { type: 'all', values: [] },
+    testModel: { type: 'include', values: ['X6841_H6941'] },
+    androidVersion: { type: 'include', values: ['14', '15'] },
+    tosVersion: { type: 'include', values: ['tOS 14.1.0', 'tOS 15.1.0'] },
+    filterIndia: false,
+    isPaUpdate: false,
+    materials: [],
+    isGpPublish: false,
+  },
+};
+
+/** 物料数据（按 appId 索引） */
+export const mockMaterialData: Record<string, MaterialFormData[]> = {
+  'APP-001': [
+    {
+      langCode: 'en', langName: 'English',
+      appNameI18n: 'Weather Pro',
+      shortDesc: 'Accurate weather forecasts for Africa and beyond.',
+      productDetail: 'Weather Pro provides hyper-local weather forecasts with hourly and 7-day predictions. Features include rain alerts, UV index, AQI monitoring, and severe weather warnings.',
+      updateNote: 'v2.1.0: Improved forecast accuracy, added rain probability chart, fixed notification issues.',
+      keywords: ['weather', 'forecast', 'rain', 'temperature', 'climate'],
+      iconUrl: '', topImageUrl: '', screenshotUrls: [],
+    },
+  ],
+  'APP-002': [
+    {
+      langCode: 'en', langName: 'English',
+      appNameI18n: 'HiOS Launcher',
+      shortDesc: 'Smart, fast, and beautiful home screen launcher.',
+      productDetail: 'HiOS Launcher brings a modern and customizable home screen experience. Enjoy smart folders, gesture controls, app drawer themes, and desktop widgets.',
+      updateNote: 'v5.0.1: Added desktop widgets, improved app drawer performance.',
+      keywords: ['launcher', 'theme', 'widget', 'home screen'],
+      iconUrl: '', topImageUrl: '', screenshotUrls: [],
+    },
+  ],
+  'APP-003': [
+    {
+      langCode: 'en', langName: 'English',
+      appNameI18n: 'Palm Store',
+      shortDesc: 'Discover and download the best apps.',
+      productDetail: 'Palm Store is the official app marketplace. Browse curated collections, download trending apps, and manage updates effortlessly.',
+      updateNote: 'v3.2.0: Added search recommendations, improved download speed.',
+      keywords: ['store', 'apps', 'download', 'marketplace'],
+      iconUrl: '', topImageUrl: '', screenshotUrls: [],
+    },
+  ],
+  'APP-004': [
+    {
+      langCode: 'en', langName: 'English',
+      appNameI18n: 'Smart Finance',
+      shortDesc: 'Secure mobile financial services.',
+      productDetail: 'Smart Finance provides secure mobile banking, bill payments, and financial tracking. Compliant with international security standards.',
+      updateNote: 'v1.5.0: Security compliance upgrade, improved transaction speed.',
+      keywords: ['finance', 'banking', 'payment'],
+      iconUrl: '', topImageUrl: '', screenshotUrls: [],
+    },
+  ],
+  'APP-006': [
+    {
+      langCode: 'en', langName: 'English',
+      appNameI18n: 'Smart Health',
+      shortDesc: 'Your personal health companion.',
+      productDetail: 'Track your health metrics, set fitness goals, and receive personalized health insights with Smart Health.',
+      updateNote: 'v1.0.0: Initial release with step tracking, heart rate monitoring, and health tips.',
+      keywords: ['health', 'fitness', 'wellness'],
+      iconUrl: '', topImageUrl: '', screenshotUrls: [],
+    },
+  ],
+  'APP-008': [
+    {
+      langCode: 'en', langName: 'English',
+      appNameI18n: 'Phoenix Browser',
+      shortDesc: 'Fast, safe, and data-saving browser.',
+      productDetail: 'Phoenix Browser delivers a fast and secure browsing experience with built-in ad blocker, data compression, and download manager.',
+      updateNote: 'v6.2.0: Browser engine upgrade, improved rendering speed.',
+      keywords: ['browser', 'web', 'fast', 'safe'],
+      iconUrl: '', topImageUrl: '', screenshotUrls: [],
+    },
+  ],
+  'APP-009': [
+    {
+      langCode: 'en', langName: 'English',
+      appNameI18n: 'CarlCare',
+      shortDesc: 'Official after-sales service app.',
+      productDetail: 'CarlCare provides device diagnostics, warranty check, repair booking, and customer support for all Transsion devices.',
+      updateNote: 'v3.5.0: New service features, improved support flow.',
+      keywords: ['service', 'repair', 'support'],
+      iconUrl: '', topImageUrl: '', screenshotUrls: [],
+    },
+  ],
+};
+
+/** 审核记录（按 nodeId 索引） */
+export const mockReviewRecords: Record<string, ReviewRecord[]> = {
+  // APP-001 的通道发布审核（已完成）
+  'APP-001-N002': [
+    { reviewId: 'REV-001', nodeId: 'APP-001-N002', reviewType: 'ops_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: 'approved', reviewComment: '信息完整，审核通过', reviewTime: '2026-03-02T10:00:00Z' },
+    { reviewId: 'REV-002', nodeId: 'APP-001-N002', reviewType: 'boss_sign', reviewerId: 'BOSS-001', reviewerName: '老板A', reviewResult: 'approved', reviewComment: '同意发布', reviewTime: '2026-03-02T14:00:00Z' },
+    { reviewId: 'REV-003', nodeId: 'APP-001-N002', reviewType: 'boss_sign', reviewerId: 'BOSS-002', reviewerName: '老板B', reviewResult: 'approved', reviewComment: '', reviewTime: '2026-03-02T15:30:00Z' },
+  ],
+  // APP-001 的物料审核（已完成）
+  'APP-001-N004': [
+    { reviewId: 'REV-004', nodeId: 'APP-001-N004', reviewType: 'material_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: 'approved', reviewComment: '物料符合要求', reviewTime: '2026-03-03T09:00:00Z' },
+  ],
+  // APP-002 的通道发布审核（运营已通过，老板待审核）
+  'APP-002-N002': [
+    { reviewId: 'REV-005', nodeId: 'APP-002-N002', reviewType: 'ops_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: null, reviewComment: undefined, reviewTime: null },
+  ],
+  // APP-008 的物料审核（进行中）
+  'APP-008-N004': [
+    { reviewId: 'REV-006', nodeId: 'APP-008-N004', reviewType: 'material_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: null, reviewComment: undefined, reviewTime: null },
+  ],
+  // APP-009 的通道发布审核（进行中）
+  'APP-009-N002': [
+    { reviewId: 'REV-007', nodeId: 'APP-009-N002', reviewType: 'ops_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: null, reviewComment: undefined, reviewTime: null },
+  ],
+};
+
+/** 外部平台数据（按 nodeId 索引） */
+export const mockExternalData: Record<string, ExternalPlatformData> = {
+  // APP-001 的应用上架（已完成）
+  'APP-001-N005': {
+    status: '生效中', appName: 'Weather Pro', taskName: 'Weather Pro v2.1.0 上架任务',
+    packageName: 'com.transsion.weather', publishCountry: 'NG,KE,TZ,GH,EG',
+    brand: 'Tecno,Infinix,itel', model: '全部机型', language: 'en',
+    androidVersion: '13,14,15', tosVersion: 'tOS 13.0.0,tOS 14.1.0,tOS 15.1.0',
+    grayScale: 100, category: 'Weather', effectiveTime: '2026-03-05T00:00:00Z',
+  },
+  // APP-001 的业务内测（已完成）
+  'APP-001-N006': {
+    status: '生效中', appName: 'Weather Pro', taskName: 'Weather Pro v2.1.0 内测任务',
+    packageName: 'com.transsion.weather', publishCountry: 'NG,KE',
+    brand: 'Tecno', model: 'X6841_H6941,KO5_H8925', language: 'en',
+    androidVersion: '14,15', tosVersion: 'tOS 14.1.0,tOS 15.1.0',
+    grayScale: 30, category: 'Weather', effectiveTime: '2026-03-06T00:00:00Z',
+  },
+  // APP-004 的业务内测（进行中）
+  'APP-004-N006': {
+    status: '生效中', appName: 'Smart Finance', taskName: 'Smart Finance v1.5.0 内测任务',
+    packageName: 'com.transsion.finance', publishCountry: 'NG,KE,GH,EG',
+    brand: 'Tecno', model: '全部机型', language: 'en',
+    androidVersion: '14,15', tosVersion: 'tOS 14.1.0,tOS 15.1.0',
+    grayScale: 20, category: 'Finance', effectiveTime: '2026-03-10T00:00:00Z',
+  },
+  // APP-006 的应用上架（进行中）
+  'APP-006-N005': {
+    status: '生效中', appName: 'Smart Health', taskName: 'Smart Health v1.0.0 上架任务',
+    packageName: 'com.transsion.health', publishCountry: 'NG,KE',
+    brand: 'Tecno,Infinix', model: '全部机型', language: 'en',
+    androidVersion: '14,15', tosVersion: 'tOS 14.1.0,tOS 15.1.0',
+    grayScale: 100, category: 'Medical', effectiveTime: '2026-03-08T00:00:00Z',
+  },
+};
+
+/** 灰度监控数据（按 nodeId 索引） */
+export const mockGrayMonitorData: Record<string, GrayMonitorData> = {
+  // APP-001 灰度监控（已完成）
+  'APP-001-N007': {
+    appName: 'Weather Pro', packageName: 'com.transsion.weather',
+    taskName: 'Weather Pro v2.1.0 灰度监控',
+    effectiveTime: '2026-03-07T00:00:00Z', grayScale: '100%/100%',
+    status: '进行中', createdAt: '2026-03-05T00:00:00Z',
+  },
+};
+
+/** 应用版本列表（按 appId 索引） */
+export const mockAppVersions: Record<string, AppVersion[]> = {
+  'APP-001': [
+    { versionCode: 'v2.1.0', versionName: '2.1.0', apkUrl: 'https://cdn.transsion.com/apk/weather-pro-2.1.0.apk', apkSize: 45678912, buildTime: '2026-02-28T10:00:00Z', isUsedInCurrentFlow: true },
+    { versionCode: 'v2.0.5', versionName: '2.0.5', apkUrl: 'https://cdn.transsion.com/apk/weather-pro-2.0.5.apk', apkSize: 44123456, buildTime: '2026-02-15T10:00:00Z', isUsedInCurrentFlow: false },
+    { versionCode: 'v2.0.0', versionName: '2.0.0', apkUrl: 'https://cdn.transsion.com/apk/weather-pro-2.0.0.apk', apkSize: 42000000, buildTime: '2026-01-20T10:00:00Z', isUsedInCurrentFlow: false },
+  ],
+  'APP-002': [
+    { versionCode: 'v5.0.1', versionName: '5.0.1', apkUrl: 'https://cdn.transsion.com/apk/hios-launcher-5.0.1.apk', apkSize: 67890123, buildTime: '2026-03-01T10:00:00Z', isUsedInCurrentFlow: true },
+    { versionCode: 'v5.0.0', versionName: '5.0.0', apkUrl: 'https://cdn.transsion.com/apk/hios-launcher-5.0.0.apk', apkSize: 67000000, buildTime: '2026-02-20T10:00:00Z', isUsedInCurrentFlow: false },
+  ],
+  'APP-003': [
+    { versionCode: 'v3.2.0', versionName: '3.2.0', apkUrl: 'https://cdn.transsion.com/apk/palm-store-3.2.0.apk', apkSize: 56789012, buildTime: '2026-02-25T10:00:00Z', isUsedInCurrentFlow: true },
+    { versionCode: 'v3.1.0', versionName: '3.1.0', apkUrl: 'https://cdn.transsion.com/apk/palm-store-3.1.0.apk', apkSize: 55000000, buildTime: '2026-02-10T10:00:00Z', isUsedInCurrentFlow: false },
+  ],
+  'APP-004': [
+    { versionCode: 'v1.5.0', versionName: '1.5.0', apkUrl: 'https://cdn.transsion.com/apk/smart-finance-1.5.0.apk', apkSize: 34567890, buildTime: '2026-03-02T10:00:00Z', isUsedInCurrentFlow: true },
+    { versionCode: 'v1.4.0', versionName: '1.4.0', apkUrl: 'https://cdn.transsion.com/apk/smart-finance-1.4.0.apk', apkSize: 33000000, buildTime: '2026-02-15T10:00:00Z', isUsedInCurrentFlow: false },
+  ],
+  'APP-005': [
+    { versionCode: 'v4.0.0', versionName: '4.0.0', apkUrl: 'https://cdn.transsion.com/apk/edu-learn-4.0.0.apk', apkSize: 51234567, buildTime: '2026-03-03T10:00:00Z', isUsedInCurrentFlow: true },
+    { versionCode: 'v3.9.0', versionName: '3.9.0', apkUrl: 'https://cdn.transsion.com/apk/edu-learn-3.9.0.apk', apkSize: 50000000, buildTime: '2026-02-20T10:00:00Z', isUsedInCurrentFlow: false },
+  ],
+  'APP-006': [
+    { versionCode: 'v1.0.0', versionName: '1.0.0', apkUrl: 'https://cdn.transsion.com/apk/smart-health-1.0.0.apk', apkSize: 28901234, buildTime: '2026-03-04T10:00:00Z', isUsedInCurrentFlow: true },
+  ],
+  'APP-007': [
+    { versionCode: 'v8.0.0', versionName: '8.0.0', apkUrl: 'https://cdn.transsion.com/apk/boomplay-8.0.0.apk', apkSize: 89012345, buildTime: '2026-03-04T10:00:00Z', isUsedInCurrentFlow: true },
+    { versionCode: 'v7.9.0', versionName: '7.9.0', apkUrl: 'https://cdn.transsion.com/apk/boomplay-7.9.0.apk', apkSize: 87000000, buildTime: '2026-02-28T10:00:00Z', isUsedInCurrentFlow: false },
+  ],
+  'APP-008': [
+    { versionCode: 'v6.2.0', versionName: '6.2.0', apkUrl: 'https://cdn.transsion.com/apk/phoenix-browser-6.2.0.apk', apkSize: 62345678, buildTime: '2026-03-04T10:00:00Z', isUsedInCurrentFlow: true },
+    { versionCode: 'v6.1.0', versionName: '6.1.0', apkUrl: 'https://cdn.transsion.com/apk/phoenix-browser-6.1.0.apk', apkSize: 61000000, buildTime: '2026-02-25T10:00:00Z', isUsedInCurrentFlow: false },
+  ],
+  'APP-009': [
+    { versionCode: 'v3.5.0', versionName: '3.5.0', apkUrl: 'https://cdn.transsion.com/apk/carlcare-3.5.0.apk', apkSize: 40123456, buildTime: '2026-03-04T10:00:00Z', isUsedInCurrentFlow: true },
+    { versionCode: 'v3.4.0', versionName: '3.4.0', apkUrl: 'https://cdn.transsion.com/apk/carlcare-3.4.0.apk', apkSize: 39000000, buildTime: '2026-02-20T10:00:00Z', isUsedInCurrentFlow: false },
+  ],
+};
