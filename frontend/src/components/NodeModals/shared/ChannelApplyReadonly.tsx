@@ -20,7 +20,7 @@ const ChannelApplyReadonly: React.FC<ChannelApplyReadonlyProps> = ({
   return (
     <Tabs
       activeKey={activeKey}
-      onChange={setActiveKey}
+      onChange={(key) => setActiveKey(key as 'basic' | 'material')}
       items={[
         {
           key: 'basic',

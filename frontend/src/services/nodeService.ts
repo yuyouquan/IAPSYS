@@ -48,7 +48,7 @@ export async function uploadFile(file: File): Promise<string> {
   const result = await request.post('/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
-  return (result as { url: string }).url;
+  return (result as unknown as { url: string }).url;
 }
 
 export function getAppVersions(appId: string): Promise<AppVersion[]> {

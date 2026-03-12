@@ -29,7 +29,7 @@ const ChannelApplyModal: React.FC<ChannelApplyModalProps> = ({
   const [materials, setMaterials] = useState<MaterialFormData[]>([]);
   const [isGpPublish, setIsGpPublish] = useState(false);
   const [gpLink, setGpLink] = useState('');
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const isEditable = nodeData.nodeStatus === 'processing' || nodeData.nodeStatus === 'rejected';
   const storageKey = `${STORAGE_PREFIX}${nodeData.nodeId}`;
