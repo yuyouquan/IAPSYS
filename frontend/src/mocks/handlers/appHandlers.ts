@@ -72,6 +72,13 @@ export const appHandlers = [
     });
   }),
 
+  http.post('/api/v1/flows/:flowId/apps', () => {
+    return HttpResponse.json({
+      code: 0, message: 'success',
+      data: null,
+    });
+  }),
+
   http.get('/api/v1/flows/:flowId/apps/:appId', ({ params }) => {
     const app = mockApps.find(a => a.id === params.appId && a.flowId === params.flowId);
     if (!app) return HttpResponse.json({ code: 404, message: '应用不存在', data: null });
