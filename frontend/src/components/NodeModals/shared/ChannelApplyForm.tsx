@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Form, Input, Select, Radio, InputNumber, DatePicker, Descriptions, Tag, Space,
+  Form, Input, Select, Radio, InputNumber, DatePicker, Descriptions, Tag, Space, Row, Col,
 } from 'antd';
 import type { FormInstance } from 'antd';
 import dayjs from 'dayjs';
@@ -177,29 +177,44 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
         </Form.Item>
       </Space>
 
-      <Form.Item label="目标国家" name="publishCountry" rules={[{ required: true, message: '请选择目标国家' }]}>
-        <TypeSelector options={[...COUNTRIES]} placeholder="请选择目标国家" />
-      </Form.Item>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item label="目标国家" name="publishCountry" rules={[{ required: true, message: '请选择目标国家' }]}>
+            <TypeSelector options={[...COUNTRIES]} placeholder="请选择目标国家" />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="目标品牌" name="publishBrand" rules={[{ required: true, message: '请选择目标品牌' }]}>
+            <TypeSelector options={[...BRANDS]} placeholder="请选择目标品牌" />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item label="目标品牌" name="publishBrand" rules={[{ required: true, message: '请选择目标品牌' }]}>
-        <TypeSelector options={[...BRANDS]} placeholder="请选择目标品牌" />
-      </Form.Item>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item label="目标机型" name="publishModel" rules={[{ required: true, message: '请选择目标机型' }]}>
+            <TypeSelector options={[...DEVICE_MODELS]} placeholder="请选择目标机型" />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="测试机型" name="testModel" rules={[{ required: true, message: '请选择测试机型' }]}>
+            <TypeSelector options={[...DEVICE_MODELS]} placeholder="请选择测试机型" />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item label="目标机型" name="publishModel" rules={[{ required: true, message: '请选择目标机型' }]}>
-        <TypeSelector options={[...DEVICE_MODELS]} placeholder="请选择目标机型" />
-      </Form.Item>
-
-      <Form.Item label="测试机型" name="testModel" rules={[{ required: true, message: '请选择测试机型' }]}>
-        <TypeSelector options={[...DEVICE_MODELS]} placeholder="请选择测试机型" />
-      </Form.Item>
-
-      <Form.Item label="目标 Android 版本" name="androidVersion" rules={[{ required: true, message: '请选择 Android 版本' }]}>
-        <TypeSelector options={[...ANDROID_VERSIONS]} placeholder="请选择 Android 版本" />
-      </Form.Item>
-
-      <Form.Item label="tOS 版本" name="tosVersion" rules={[{ required: true, message: '请选择 tOS 版本' }]}>
-        <TypeSelector options={filteredTosVersions} placeholder="请选择 tOS 版本" />
-      </Form.Item>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item label="目标 Android 版本" name="androidVersion" rules={[{ required: true, message: '请选择 Android 版本' }]}>
+            <TypeSelector options={[...ANDROID_VERSIONS]} placeholder="请选择 Android 版本" />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="tOS 版本" name="tosVersion" rules={[{ required: true, message: '请选择 tOS 版本' }]}>
+            <TypeSelector options={filteredTosVersions} placeholder="请选择 tOS 版本" />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Space size={16} style={{ display: 'flex' }}>
         <Form.Item label="是否过滤印度" name="filterIndia" rules={[{ required: true }]}>
