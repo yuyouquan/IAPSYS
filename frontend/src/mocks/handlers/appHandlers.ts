@@ -72,7 +72,41 @@ export const appHandlers = [
     });
   }),
 
-  http.post('/api/v1/flows/:flowId/apps', () => {
+  http.post('/api/v1/flows/:flowId/apps', async ({ params, request }) => {
+    const body = await request.json() as { appIds: string[] };
+    const flowId = params.flowId as string;
+    const availableApps = [
+      { id: 'AV-001', appIcon: '', appName: 'Weather Pro', packageName: 'com.transsion.weather', appType: 'Weather' },
+      { id: 'AV-002', appIcon: '', appName: 'HiOS Launcher', packageName: 'com.transsion.launcher', appType: 'Entertainment' },
+      { id: 'AV-003', appIcon: '', appName: 'Palm Store', packageName: 'com.transsion.store', appType: 'Shopping' },
+      { id: 'AV-004', appIcon: '', appName: 'Smart Finance', packageName: 'com.transsion.finance', appType: 'Finance' },
+      { id: 'AV-005', appIcon: '', appName: 'EDU Learn', packageName: 'com.transsion.edu', appType: 'Education' },
+      { id: 'AV-006', appIcon: '', appName: 'Boomplay', packageName: 'com.transsion.boomplay', appType: 'Entertainment' },
+      { id: 'AV-007', appIcon: '', appName: 'Phoenix Browser', packageName: 'com.transsion.browser', appType: 'Travel & Local' },
+      { id: 'AV-008', appIcon: '', appName: 'CarlCare', packageName: 'com.transsion.carlcare', appType: 'Business' },
+      { id: 'AV-009', appIcon: '', appName: 'Smart Health', packageName: 'com.transsion.health', appType: 'Medical' },
+      { id: 'AV-010', appIcon: '', appName: 'Auto Drive', packageName: 'com.transsion.autodrive', appType: 'Auto & Vehicles' },
+    ];
+    const appIds = body?.appIds || [];
+    for (const appId of appIds) {
+      const available = availableApps.find(a => a.id === appId);
+      if (available) {
+        const newId = `APP-${String(mockApps.length + 1).padStart(3, '0')}`;
+        mockApps.push({
+          id: newId,
+          flowId,
+          appIcon: available.appIcon,
+          appName: available.appName,
+          packageName: available.packageName,
+          appType: available.appType,
+          versionCode: '',
+          currentNode: 'channel_apply',
+          currentNodeStatus: 'processing',
+          operator: '张三',
+          createdAt: new Date().toISOString(),
+        });
+      }
+    }
     return HttpResponse.json({
       code: 0, message: 'success',
       data: null,
