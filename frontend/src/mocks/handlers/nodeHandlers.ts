@@ -6,6 +6,7 @@ import {
   mockExternalData,
   mockGrayMonitorData,
 } from '../data/nodeData';
+import { mockApps } from '../data/apps';
 
 /**
  * 从 nodeId 中解析出 appId 和节点序号
@@ -29,6 +30,21 @@ export const nodeHandlers = [
   http.get('/api/v1/nodes/:nodeId/channel-apply', ({ params }) => {
     const parsed = parseNodeId(params.nodeId as string);
     const data = parsed ? mockChannelApplyData[parsed.appId] : undefined;
+    // 新建应用没有 channel-apply 数据时，从 mockApps 带入基本信息
+    if (!data && parsed) {
+      const app = mockApps.find(a => a.id === parsed.appId);
+      if (app) {
+        return HttpResponse.json({
+          code: 0,
+          message: 'success',
+          data: {
+            appName: app.appName,
+            packageName: app.packageName,
+            appType: app.appType,
+          },
+        });
+      }
+    }
     return HttpResponse.json({
       code: 0,
       message: 'success',

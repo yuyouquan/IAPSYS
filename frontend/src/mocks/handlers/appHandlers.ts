@@ -63,6 +63,9 @@ export const appHandlers = [
       });
     }
 
+    // 按创建时间倒序，最新添加的排在最前面
+    filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
     const start = (page - 1) * pageSize;
     const list = filtered.slice(start, start + pageSize);
 
