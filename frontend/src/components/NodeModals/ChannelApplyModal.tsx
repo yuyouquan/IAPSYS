@@ -4,7 +4,7 @@ import type { ProcessNode, ChannelApplyFormData, MaterialFormData } from '../../
 import ChannelApplyForm from './shared/ChannelApplyForm';
 import MaterialForm from './shared/MaterialForm';
 import ChannelApplyReadonly from './shared/ChannelApplyReadonly';
-import { getChannelApplyData, submitChannelApply } from '../../services/nodeService';
+import { getChannelApplyData, submitChannelApply, advanceNode } from '../../services/nodeService';
 
 interface ChannelApplyModalProps {
   visible: boolean;
@@ -89,8 +89,15 @@ const ChannelApplyModal: React.FC<ChannelApplyModalProps> = ({
     try {
       const formValues = await form.validateFields();
       setSubmitting(true);
+      const defaultAll = { type: 'all' as const, values: [] as string[] };
       const data: ChannelApplyFormData = {
         ...formValues,
+        publishCountry: formValues.publishCountry || defaultAll,
+        publishBrand: formValues.publishBrand || defaultAll,
+        publishModel: formValues.publishModel || defaultAll,
+        testModel: formValues.testModel || defaultAll,
+        androidVersion: formValues.androidVersion || defaultAll,
+        tosVersion: formValues.tosVersion || defaultAll,
         materials,
         isGpPublish,
         gpLink: isGpPublish ? gpLink : undefined,
@@ -102,6 +109,7 @@ const ChannelApplyModal: React.FC<ChannelApplyModalProps> = ({
           : undefined,
       };
       await submitChannelApply(nodeData.nodeId, data);
+      await advanceNode(nodeData.nodeId);
       localStorage.removeItem(storageKey);
       message.success('通道发布申请提交成功');
       onSubmit(data);

@@ -17,12 +17,16 @@ request.interceptors.request.use((config) => {
 
 request.interceptors.response.use(
   (response) => {
+    // 非 JSON 响应直接返回
+    if (typeof response.data !== 'object' || response.data === null) {
+      return response.data;
+    }
     const { code, message: msg, data } = response.data;
-    if (code !== 0) {
+    if (code !== undefined && code !== 0) {
       message.error(msg || '操作失败');
       return Promise.reject(new Error(msg));
     }
-    return data;
+    return data !== undefined ? data : response.data;
   },
   (error) => {
     if (error.response?.status === 401) {

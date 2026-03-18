@@ -89,6 +89,15 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
     }
   };
 
+  const typeSelectorRule = (label: string) => ({
+    validator(_: unknown, value?: TypeSelectorValue) {
+      // undefined means default "全部", which is valid
+      if (!value || value.type === 'all') return Promise.resolve();
+      if (value.values.length > 0) return Promise.resolve();
+      return Promise.reject(new Error(`请选择${label}`));
+    },
+  });
+
   if (readonly && data) {
     return (
       <Descriptions bordered size="small" column={2}>
@@ -113,7 +122,7 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
         <Descriptions.Item label="是否 PA 更新">{data.isPaUpdate ? '是' : '否'}</Descriptions.Item>
         {data.isPaUpdate && (
           <>
-            <Descriptions.Item label="灰度量级">{data.grayScale}%</Descriptions.Item>
+            <Descriptions.Item label="灰度量级">{data.grayScale}万</Descriptions.Item>
             <Descriptions.Item label="生效时间">
               {data.effectiveTimeRange?.join(' ~ ') || '-'}
             </Descriptions.Item>
@@ -179,12 +188,12 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
 
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item label="目标国家" name="publishCountry" rules={[{ required: true, message: '请选择目标国家' }]}>
+          <Form.Item label="目标国家" name="publishCountry" rules={[typeSelectorRule('目标国家')]}>
             <TypeSelector options={[...COUNTRIES]} placeholder="请选择目标国家" />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="目标品牌" name="publishBrand" rules={[{ required: true, message: '请选择目标品牌' }]}>
+          <Form.Item label="目标品牌" name="publishBrand" rules={[typeSelectorRule('目标品牌')]}>
             <TypeSelector options={[...BRANDS]} placeholder="请选择目标品牌" />
           </Form.Item>
         </Col>
@@ -192,12 +201,12 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
 
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item label="目标机型" name="publishModel" rules={[{ required: true, message: '请选择目标机型' }]}>
+          <Form.Item label="目标机型" name="publishModel" rules={[typeSelectorRule('目标机型')]}>
             <TypeSelector options={[...DEVICE_MODELS]} placeholder="请选择目标机型" />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="测试机型" name="testModel" rules={[{ required: true, message: '请选择测试机型' }]}>
+          <Form.Item label="测试机型" name="testModel" rules={[typeSelectorRule('测试机型')]}>
             <TypeSelector options={[...DEVICE_MODELS]} placeholder="请选择测试机型" />
           </Form.Item>
         </Col>
@@ -205,12 +214,12 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
 
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item label="目标 Android 版本" name="androidVersion" rules={[{ required: true, message: '请选择 Android 版本' }]}>
+          <Form.Item label="目标 Android 版本" name="androidVersion" rules={[typeSelectorRule('Android 版本')]}>
             <TypeSelector options={[...ANDROID_VERSIONS]} placeholder="请选择 Android 版本" />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="tOS 版本" name="tosVersion" rules={[{ required: true, message: '请选择 tOS 版本' }]}>
+          <Form.Item label="tOS 版本" name="tosVersion" rules={[typeSelectorRule('tOS 版本')]}>
             <TypeSelector options={filteredTosVersions} placeholder="请选择 tOS 版本" />
           </Form.Item>
         </Col>
@@ -234,7 +243,7 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
       {watchIsPaUpdate && (
         <Space size={16} style={{ display: 'flex' }}>
           <Form.Item label="灰度量级" name="grayScale" rules={[{ required: true, message: '请输入灰度量级' }]}>
-            <InputNumber min={1} max={100} addonAfter="%" style={{ width: 180 }} placeholder="灰度比例" />
+            <InputNumber min={1} max={50000} addonAfter="万" style={{ width: 180 }} placeholder="请输入灰度量级" />
           </Form.Item>
           <Form.Item label="生效时间" name="effectiveTimeRange" rules={[{ required: true, message: '请选择生效时间' }]}>
             <DatePicker.RangePicker showTime style={{ width: 380 }} />

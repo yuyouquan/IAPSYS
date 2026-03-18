@@ -8,6 +8,7 @@ import {
   getChannelApplyData,
   getMaterialData,
   submitMaterials,
+  advanceNode,
 } from '../../services/nodeService';
 
 interface MaterialUploadModalProps {
@@ -54,11 +55,43 @@ const MaterialUploadModal: React.FC<MaterialUploadModalProps> = ({
       .finally(() => setLoading(false));
   }, [visible, nodeData.nodeId]);
 
+  const validateMaterials = (): boolean => {
+    for (const m of materials) {
+      if (!m.appNameI18n?.trim()) {
+        message.warning(`请填写 ${m.langName || m.langCode} 的应用名称`);
+        return false;
+      }
+      if (!m.shortDesc?.trim()) {
+        message.warning(`请填写 ${m.langName || m.langCode} 的一句话描述`);
+        return false;
+      }
+      if (!m.productDetail?.trim()) {
+        message.warning(`请填写 ${m.langName || m.langCode} 的产品详情`);
+        return false;
+      }
+      if (!m.updateNote?.trim()) {
+        message.warning(`请填写 ${m.langName || m.langCode} 的更新说明`);
+        return false;
+      }
+      if (!m.keywords || m.keywords.length === 0) {
+        message.warning(`请填写 ${m.langName || m.langCode} 的关键词`);
+        return false;
+      }
+      if (!m.screenshotUrls || m.screenshotUrls.length < 3) {
+        message.warning(`${m.langName || m.langCode} 的详情截图至少需要3张`);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
     if (!isEditable) return;
+    if (!validateMaterials()) return;
     try {
       setSubmitting(true);
       await submitMaterials(nodeData.nodeId, materials);
+      await advanceNode(nodeData.nodeId);
       message.success('物料提交成功');
       onSubmit(materials);
     } catch {

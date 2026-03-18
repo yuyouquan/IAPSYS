@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { mockApps } from '../data/apps';
 import { mockAppVersions } from '../data/nodeData';
+import { currentUser } from '../data/users';
 import type { AppRecord } from '../../types/app';
 import type { NodeType, NodeStatus } from '../../types/node';
 
@@ -105,7 +106,7 @@ export const appHandlers = [
           versionCode: '',
           currentNode: 'channel_apply',
           currentNodeStatus: 'processing',
-          operator: '张三',
+          operator: currentUser.name,
           createdAt: new Date().toISOString(),
         });
       }
@@ -139,11 +140,26 @@ export const appHandlers = [
 
   http.get('/api/v1/apps/:appId/versions', ({ params }) => {
     const appId = params.appId as string;
-    const versions = mockAppVersions[appId] || [];
+    let versions = mockAppVersions[appId];
+
+    // 对新添加的应用自动生成 mock 版本数据
+    if (!versions) {
+      const app = mockApps.find(a => a.id === appId);
+      if (app) {
+        const pkg = app.packageName.split('.').pop() || 'app';
+        versions = [
+          { versionCode: 'v1.0.0', versionName: '1.0.0', apkUrl: `https://cdn.transsion.com/apk/${pkg}-1.0.0.apk`, apkSize: 30000000, buildTime: new Date().toISOString(), isUsedInCurrentFlow: false },
+          { versionCode: 'v0.9.0', versionName: '0.9.0', apkUrl: `https://cdn.transsion.com/apk/${pkg}-0.9.0.apk`, apkSize: 28000000, buildTime: '2026-02-15T10:00:00Z', isUsedInCurrentFlow: false },
+          { versionCode: 'v0.8.0', versionName: '0.8.0', apkUrl: `https://cdn.transsion.com/apk/${pkg}-0.8.0.apk`, apkSize: 26000000, buildTime: '2026-01-20T10:00:00Z', isUsedInCurrentFlow: false },
+        ];
+        mockAppVersions[appId] = versions;
+      }
+    }
+
     return HttpResponse.json({
       code: 0,
       message: 'success',
-      data: versions,
+      data: versions || [],
     });
   }),
 

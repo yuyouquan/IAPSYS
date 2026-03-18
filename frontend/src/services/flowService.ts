@@ -10,6 +10,10 @@ export async function getFlowDetail(flowId: string): Promise<FlowRecord> {
   return request.get(`/flows/${flowId}`);
 }
 
-export async function createShuttle(type: 'monthly' | 'temporary'): Promise<FlowRecord> {
-  return request.post('/flows', { type });
+export async function createShuttle(type: 'monthly' | 'temporary', suffix?: string): Promise<FlowRecord> {
+  return request.post('/flows', { type, suffix });
+}
+
+export async function deleteShuttle(flowId: string): Promise<void> {
+  return request.delete(`/flows/${flowId}`);
 }

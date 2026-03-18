@@ -1,6 +1,8 @@
 import type { UserInfo } from '../../types/user';
 
 export const mockUsers: UserInfo[] = [
+  { userId: 'U010', name: '付宇', role: 'R08', roleName: '管理员' },
+  { userId: 'U011', name: '高成明', role: 'R08', roleName: '管理员' },
   { userId: 'U001', name: '张三', role: 'R01', roleName: '需求方' },
   { userId: 'U002', name: '李四', role: 'R02', roleName: '运营人员' },
   { userId: 'U003', name: '王五', role: 'R03', roleName: '管理层' },
@@ -12,4 +14,7 @@ export const mockUsers: UserInfo[] = [
   { userId: 'U009', name: '钱十一', role: 'R01', roleName: '需求方' },
 ];
 
-export const currentUser = mockUsers[0];
+/** 班车申请允许发起的人员：管理员(R08) + 管理层(R03) */
+export const SHUTTLE_APPLICANTS = ['U010', 'U011', 'U003', 'U004'];
+
+export const currentUser = mockUsers[0]; // 付宇

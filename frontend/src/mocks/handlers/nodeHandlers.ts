@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw';
+import type { NodeType } from '../../types/node';
 import {
   mockChannelApplyData,
   mockMaterialData,
@@ -7,6 +8,17 @@ import {
   mockGrayMonitorData,
 } from '../data/nodeData';
 import { mockApps } from '../data/apps';
+
+/** 节点类型顺序，用于推进/回退 */
+const NODE_TYPES: { type: NodeType; ownerName: string }[] = [
+  { type: 'channel_apply',   ownerName: '张三' },
+  { type: 'channel_review',  ownerName: '李四' },
+  { type: 'material_upload', ownerName: '孙七' },
+  { type: 'material_review', ownerName: '李四' },
+  { type: 'app_publish',     ownerName: '周八' },
+  { type: 'biz_test',        ownerName: '吴九' },
+  { type: 'gray_monitor',    ownerName: '郑十' },
+];
 
 /**
  * 从 nodeId 中解析出 appId 和节点序号
@@ -52,15 +64,20 @@ export const nodeHandlers = [
     });
   }),
 
-  // 提交通道发布申请
-  http.post('/api/v1/nodes/:nodeId/channel-apply', async ({ request }) => {
-    const body = await request.json();
-    console.log('[MSW] Submit channel apply:', body);
-    return HttpResponse.json({
-      code: 0,
-      message: 'success',
-      data: null,
-    });
+  // 提交通道发布申请 → 保存数据到 mockChannelApplyData
+  http.post('/api/v1/nodes/:nodeId/channel-apply', async ({ params, request }) => {
+    const body = await request.json() as Record<string, any>;
+    const parsed = parseNodeId(params.nodeId as string);
+    if (parsed) {
+      // 保存表单数据
+      mockChannelApplyData[parsed.appId] = body as any;
+      // 同步 versionCode 到 app 记录
+      const app = mockApps.find(a => a.id === parsed.appId);
+      if (app && body.versionCode) {
+        app.versionCode = body.versionCode;
+      }
+    }
+    return HttpResponse.json({ code: 0, message: 'success', data: null });
   }),
 
   // 获取审核记录
@@ -74,15 +91,37 @@ export const nodeHandlers = [
     });
   }),
 
-  // 提交审核
-  http.post('/api/v1/nodes/:nodeId/reviews', async ({ request }) => {
-    const body = await request.json();
-    console.log('[MSW] Submit review:', body);
-    return HttpResponse.json({
-      code: 0,
-      message: 'success',
-      data: null,
-    });
+  // 提交审核 → 保存记录到 mockReviewRecords
+  http.post('/api/v1/nodes/:nodeId/reviews', async ({ params, request }) => {
+    const nodeId = params.nodeId as string;
+    const body = await request.json() as { result: string; comment?: string; ccUserIds?: string[] };
+    // 初始化审核记录数组
+    if (!mockReviewRecords[nodeId]) {
+      mockReviewRecords[nodeId] = [];
+    }
+    // 判断审核类型
+    const parsed = parseNodeId(nodeId);
+    let reviewType: 'ops_review' | 'boss_sign' | 'material_review' = 'ops_review';
+    if (parsed) {
+      // N002 = channel_review, N004 = material_review
+      if (parsed.nodeIndex === 4) {
+        reviewType = 'material_review';
+      } else if (body.comment?.startsWith('[老板审核]')) {
+        reviewType = 'boss_sign';
+      }
+    }
+    const newRecord = {
+      reviewId: `REV-${Date.now()}`,
+      nodeId,
+      reviewType,
+      reviewerId: reviewType === 'boss_sign' ? `BOSS-00${mockReviewRecords[nodeId].filter(r => r.reviewType === 'boss_sign').length + 1}` : 'U002',
+      reviewerName: reviewType === 'boss_sign' ? `老板${String.fromCharCode(65 + mockReviewRecords[nodeId].filter(r => r.reviewType === 'boss_sign').length)}` : '李四',
+      reviewResult: body.result as 'approved' | 'rejected',
+      reviewComment: body.comment,
+      reviewTime: new Date().toISOString(),
+    };
+    mockReviewRecords[nodeId].push(newRecord);
+    return HttpResponse.json({ code: 0, message: 'success', data: null });
   }),
 
   // 获取物料数据
@@ -96,15 +135,14 @@ export const nodeHandlers = [
     });
   }),
 
-  // 提交物料
-  http.post('/api/v1/nodes/:nodeId/materials', async ({ request }) => {
-    const body = await request.json();
-    console.log('[MSW] Submit materials:', body);
-    return HttpResponse.json({
-      code: 0,
-      message: 'success',
-      data: null,
-    });
+  // 提交物料 → 保存数据到 mockMaterialData
+  http.post('/api/v1/nodes/:nodeId/materials', async ({ params, request }) => {
+    const body = await request.json() as any[];
+    const parsed = parseNodeId(params.nodeId as string);
+    if (parsed) {
+      mockMaterialData[parsed.appId] = body;
+    }
+    return HttpResponse.json({ code: 0, message: 'success', data: null });
   }),
 
   // 获取外部平台数据
@@ -129,24 +167,48 @@ export const nodeHandlers = [
     });
   }),
 
-  // 驳回节点
-  http.post('/api/v1/nodes/:nodeId/reject', async ({ request }) => {
-    const body = await request.json();
-    console.log('[MSW] Reject node:', body);
-    return HttpResponse.json({
-      code: 0,
-      message: 'success',
-      data: null,
-    });
+  // 驳回节点 → 更新 mockApps 中的 currentNode/currentNodeStatus
+  http.post('/api/v1/nodes/:nodeId/reject', async ({ params, request }) => {
+    const body = await request.json() as { targetNodeType: string; reason: string };
+    const parsed = parseNodeId(params.nodeId as string);
+    if (parsed) {
+      const app = mockApps.find(a => a.id === parsed.appId);
+      if (app) {
+        app.currentNode = body.targetNodeType as NodeType;
+        app.currentNodeStatus = 'rejected';
+        app.rejectReason = body.reason;
+        // 更新 operator 为目标节点的负责人
+        const targetNode = NODE_TYPES.find(n => n.type === body.targetNodeType);
+        if (targetNode) {
+          app.operator = targetNode.ownerName;
+        }
+      }
+    }
+    return HttpResponse.json({ code: 0, message: 'success', data: null });
   }),
 
-  // 推进节点
-  http.post('/api/v1/nodes/:nodeId/advance', () => {
-    return HttpResponse.json({
-      code: 0,
-      message: 'success',
-      data: null,
-    });
+  // 推进节点 → 更新 mockApps 中的 currentNode 到下一个节点
+  http.post('/api/v1/nodes/:nodeId/advance', ({ params }) => {
+    const parsed = parseNodeId(params.nodeId as string);
+    if (parsed) {
+      const app = mockApps.find(a => a.id === parsed.appId);
+      if (app) {
+        const currentIdx = NODE_TYPES.findIndex(n => n.type === app.currentNode);
+        if (currentIdx >= 0 && currentIdx < NODE_TYPES.length - 1) {
+          // 推进到下一节点
+          const nextNode = NODE_TYPES[currentIdx + 1];
+          app.currentNode = nextNode.type;
+          app.currentNodeStatus = 'processing';
+          app.operator = nextNode.ownerName;
+          app.rejectReason = undefined;
+        } else if (currentIdx === NODE_TYPES.length - 1) {
+          // 最后一个节点完成
+          app.currentNodeStatus = 'completed';
+          app.rejectReason = undefined;
+        }
+      }
+    }
+    return HttpResponse.json({ code: 0, message: 'success', data: null });
   }),
 
   // 文件上传

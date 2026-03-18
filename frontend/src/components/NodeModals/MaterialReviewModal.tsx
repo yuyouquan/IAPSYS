@@ -8,6 +8,8 @@ import {
   getMaterialData,
   getReviewRecords,
   submitReview,
+  advanceNode,
+  rejectNode,
 } from '../../services/nodeService';
 
 interface MaterialReviewModalProps {
@@ -51,9 +53,13 @@ const MaterialReviewModal: React.FC<MaterialReviewModalProps> = ({
   const handleReviewSubmit = async (data: ReviewFormData) => {
     try {
       await submitReview(nodeData.nodeId, data);
-      message.success('物料审核提交成功');
-      const updated = await getReviewRecords(nodeData.nodeId);
-      setReviews(updated || []);
+      if (data.result === 'approved') {
+        await advanceNode(nodeData.nodeId);
+        message.success('物料审核通过，已推进到应用上架');
+      } else {
+        await rejectNode(nodeData.nodeId, 'material_upload', `物料审核不通过：${data.comment || ''}`);
+        message.success('物料审核已驳回');
+      }
       onSubmit(data);
     } catch {
       message.error('提交失败');

@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { mockFlows } from '../data/flows';
 import { mockApps } from '../data/apps';
+import { currentUser } from '../data/users';
 import type { FlowRecord } from '../../types/flow';
 
 /** 根据实际应用数据动态计算班车状态摘要 */
@@ -60,7 +61,7 @@ export const flowHandlers = [
   }),
 
   http.post('/api/v1/flows', async ({ request }) => {
-    const body = await request.json() as { type: string };
+    const body = await request.json() as { type: string; suffix?: string };
     const now = new Date();
     const month = now.getMonth() + 1;
 
@@ -75,20 +76,43 @@ export const flowHandlers = [
     if (body.type === 'monthly') {
       name = `${month}月班车`;
     } else {
-      const count = mockFlows.filter(f => f.shuttleType === 'temporary' && f.name.startsWith(`${month}月临时班车`)).length + 1;
-      name = `${month}月临时班车${String(count).padStart(2, '0')}`;
+      // 临时班车使用用户自定义后缀
+      const suffix = body.suffix || '';
+      name = `${month}月临时班车-${suffix}`;
+
+      // 检查名称唯一性
+      const duplicate = mockFlows.some(f => f.name === name);
+      if (duplicate) {
+        return HttpResponse.json({ code: 1002, message: `班车名称「${name}」已存在，请更换名称`, data: null });
+      }
     }
 
     const newFlow: FlowRecord = {
       id: `FLOW-${Date.now()}`,
       name,
       shuttleType: body.type as FlowRecord['shuttleType'],
-      applicantId: 'U001', applicant: '张三',
+      applicantId: currentUser.userId,
+      applicant: currentUser.name,
       createdAt: now.toISOString(),
       statusSummary: { total: 0, success: 0, processing: 0, rejected: 0 },
     };
 
     mockFlows.unshift(newFlow);
     return HttpResponse.json({ code: 0, message: 'success', data: newFlow });
+  }),
+
+  // 删除班车
+  http.delete('/api/v1/flows/:flowId', ({ params }) => {
+    const flowId = params.flowId as string;
+    const idx = mockFlows.findIndex(f => f.id === flowId);
+    if (idx === -1) {
+      return HttpResponse.json({ code: 404, message: '班车不存在', data: null });
+    }
+    const flow = mockFlows[idx];
+    if (flow.shuttleType !== 'temporary') {
+      return HttpResponse.json({ code: 1003, message: '仅可删除临时班车', data: null });
+    }
+    mockFlows.splice(idx, 1);
+    return HttpResponse.json({ code: 0, message: 'success', data: null });
   }),
 ];

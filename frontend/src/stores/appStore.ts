@@ -37,7 +37,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
     }
   },
   fetchAppDetail: async (flowId, appId) => {
-    set({ detailLoading: true });
+    set({ detailLoading: true, currentApp: null });
     try {
       const app = await appService.getAppDetail(flowId, appId);
       set({ currentApp: app });

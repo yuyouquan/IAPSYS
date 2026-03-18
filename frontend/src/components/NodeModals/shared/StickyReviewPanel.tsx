@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
-import { Card, Radio, Input, Button, Tag, Space, Typography, message } from 'antd';
+import { Card, Radio, Input, Button, Tag, Space, Typography, Select, message } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import type { ReviewFormData, ReviewRecord } from '../../../types/node';
 
 const { TextArea } = Input;
 const { Text } = Typography;
+
+/** 可选的抄送人员列表 */
+const CC_PERSON_OPTIONS = [
+  { label: '付宇', value: 'U010' },
+  { label: '高成明', value: 'U011' },
+  { label: '张三', value: 'U001' },
+  { label: '李四', value: 'U002' },
+  { label: '王五', value: 'U003' },
+  { label: '赵六', value: 'U004' },
+  { label: '孙七', value: 'U005' },
+  { label: '周八', value: 'U006' },
+  { label: '吴九', value: 'U007' },
+  { label: '郑十', value: 'U008' },
+  { label: '钱十一', value: 'U009' },
+];
 
 interface StickyReviewPanelProps {
   title: string;
@@ -13,6 +28,7 @@ interface StickyReviewPanelProps {
   disabled?: boolean;
   counterSign?: boolean;
   counterSignReviewers?: Array<{ id: string; name: string }>;
+  showCc?: boolean;
 }
 
 const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
@@ -22,9 +38,11 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
   disabled = false,
   counterSign = false,
   counterSignReviewers = [],
+  showCc = false,
 }) => {
   const [result, setResult] = useState<'approved' | 'rejected' | null>(null);
   const [comment, setComment] = useState('');
+  const [ccUserIds, setCcUserIds] = useState<string[]>([]);
 
   const handleSubmit = () => {
     if (!result) {
@@ -35,9 +53,10 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
       message.warning('驳回时审核意见为必填');
       return;
     }
-    onSubmit?.({ result, comment: comment || undefined });
+    onSubmit?.({ result, comment: comment || undefined, ccUserIds: ccUserIds.length > 0 ? ccUserIds : undefined });
     setResult(null);
     setComment('');
+    setCcUserIds([]);
   };
 
   const getReviewerStatus = (reviewerId: string) => {
@@ -94,6 +113,27 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
             <Radio value="rejected">不通过</Radio>
           </Radio.Group>
         </div>
+
+        {showCc && (
+          <div style={{ marginBottom: 12 }}>
+            <Text strong style={{ marginRight: 12 }}>抄送人员：</Text>
+            <Select
+              mode="multiple"
+              placeholder="搜索并选择抄送人员"
+              value={ccUserIds}
+              onChange={setCcUserIds}
+              style={{ width: '100%', marginTop: 4 }}
+              options={CC_PERSON_OPTIONS}
+              showSearch
+              optionFilterProp="label"
+              filterOption={(input, option) =>
+                (option?.label as string || '').includes(input)
+              }
+              maxTagCount="responsive"
+              disabled={disabled}
+            />
+          </div>
+        )}
 
         <div style={{ marginBottom: 12 }}>
           <TextArea

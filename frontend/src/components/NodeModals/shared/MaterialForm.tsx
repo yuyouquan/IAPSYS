@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import {
-  Tabs, Form, Input, Select, Radio, Descriptions, Tag, Image, Space, Typography, Empty,
+  Tabs, Form, Input, Select, Radio, Descriptions, Tag, Image, Space, Typography, Empty, Modal,
 } from 'antd';
 import ImageUpload from './ImageUpload';
 import { LANGUAGES } from '../../../constants/enums';
@@ -50,6 +50,8 @@ const MaterialForm: React.FC<MaterialFormProps> = ({
     return [defaultMaterial('en', 'English')];
   });
   const [activeKey, setActiveKey] = useState(materials[0]?.langCode || 'en');
+  const [langSelectOpen, setLangSelectOpen] = useState(false);
+  const [selectedLangCode, setSelectedLangCode] = useState<string>();
 
   const updateMaterials = useCallback((updated: MaterialFormData[]) => {
     setMaterials(updated);
@@ -63,14 +65,25 @@ const MaterialForm: React.FC<MaterialFormProps> = ({
     updateMaterials(updated);
   };
 
+  const availableLanguages = LANGUAGES.filter(
+    (l) => !materials.some((m) => m.langCode === l.code),
+  );
+
   const handleAddTab = () => {
-    const usedCodes = materials.map((m) => m.langCode);
-    const available = LANGUAGES.filter((l) => !usedCodes.includes(l.code));
-    if (available.length === 0) return;
-    const lang = available[0];
+    if (availableLanguages.length === 0) return;
+    setSelectedLangCode(undefined);
+    setLangSelectOpen(true);
+  };
+
+  const handleConfirmAddLang = () => {
+    if (!selectedLangCode) return;
+    const lang = LANGUAGES.find((l) => l.code === selectedLangCode);
+    if (!lang) return;
     const updated = [...materials, defaultMaterial(lang.code, lang.name)];
     updateMaterials(updated);
     setActiveKey(lang.code);
+    setLangSelectOpen(false);
+    setSelectedLangCode(undefined);
   };
 
   const handleRemoveTab = (targetKey: string) => {
@@ -294,6 +307,37 @@ const MaterialForm: React.FC<MaterialFormProps> = ({
           )}
         </Form>
       </div>
+
+      {/* 添加语言弹窗 */}
+      <Modal
+        title="添加语言"
+        open={langSelectOpen}
+        onOk={handleConfirmAddLang}
+        onCancel={() => { setLangSelectOpen(false); setSelectedLangCode(undefined); }}
+        okText="确认"
+        cancelText="取消"
+        okButtonProps={{ disabled: !selectedLangCode }}
+        width={400}
+      >
+        <div style={{ padding: '16px 0' }}>
+          <Select
+            showSearch
+            placeholder="搜索并选择语言"
+            value={selectedLangCode}
+            onChange={setSelectedLangCode}
+            style={{ width: '100%' }}
+            optionFilterProp="label"
+            filterOption={(input, option) =>
+              (option?.label as string || '').toLowerCase().includes(input.toLowerCase()) ||
+              (option?.value as string || '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={availableLanguages.map((l) => ({
+              label: `${l.name} (${l.code})`,
+              value: l.code,
+            }))}
+          />
+        </div>
+      </Modal>
     </div>
   );
 };

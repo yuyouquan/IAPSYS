@@ -67,6 +67,7 @@ export interface ChannelApplyFormData {
 export interface ReviewFormData {
   result: 'approved' | 'rejected';
   comment?: string;
+  ccUserIds?: string[];
 }
 
 export interface ReviewRecord {

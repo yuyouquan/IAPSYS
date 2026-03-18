@@ -4,27 +4,32 @@ import {
   Layout, Table, Button, Input, Select, DatePicker, Space, Modal, Radio, message,
   Badge, Pagination,
 } from 'antd';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { PlusOutlined, SearchOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import StatusTag from '../../components/StatusTag';
 import TodoCard from '../../components/TodoCard';
 import { useFlowStore } from '../../stores/flowStore';
 import * as todoService from '../../services/todoService';
+import { currentUser, SHUTTLE_APPLICANTS } from '../../mocks/data/users';
 import type { FlowRecord } from '../../types/flow';
 
 const { Content, Sider } = Layout;
 const { RangePicker } = DatePicker;
 
+/** 当前用户是否有发起班车申请的权限 */
+const canCreateShuttle = SHUTTLE_APPLICANTS.includes(currentUser.userId);
+
 const Workbench: React.FC = () => {
   const navigate = useNavigate();
   const {
     flowList, flowTotal, flowLoading, flowParams,
-    fetchFlowList, createShuttle, updateFlowParams,
+    fetchFlowList, createShuttle, deleteShuttle, updateFlowParams,
   } = useFlowStore();
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [shuttleType, setShuttleType] = useState<'monthly' | 'temporary'>('monthly');
+  const [tempSuffix, setTempSuffix] = useState('');
   const [creating, setCreating] = useState(false);
 
   // 待办状态
@@ -59,16 +64,41 @@ const Workbench: React.FC = () => {
 
   // 创建班车
   const handleCreate = async () => {
+    if (shuttleType === 'temporary' && !tempSuffix.trim()) {
+      message.warning('请输入临时班车名称后缀');
+      return;
+    }
     setCreating(true);
     try {
-      await createShuttle(shuttleType);
+      await createShuttle(shuttleType, shuttleType === 'temporary' ? tempSuffix.trim() : undefined);
       message.success('班车创建成功');
       setCreateModalOpen(false);
+      setTempSuffix('');
     } catch (err: unknown) {
       if (err instanceof Error) message.error(err.message);
     } finally {
       setCreating(false);
     }
+  };
+
+  // 删除临时班车
+  const handleDelete = (record: FlowRecord) => {
+    Modal.confirm({
+      title: '确认删除',
+      icon: <ExclamationCircleOutlined />,
+      content: `确定要删除临时班车「${record.name}」吗？删除后不可恢复。`,
+      okText: '确认删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          await deleteShuttle(record.id);
+          message.success('删除成功');
+        } catch {
+          message.error('删除失败');
+        }
+      },
+    });
   };
 
   // 待办处理
@@ -117,15 +147,24 @@ const Workbench: React.FC = () => {
     {
       title: '操作',
       key: 'action',
-      width: 100,
+      width: 160,
       fixed: 'right',
       render: (_, record) => (
-        <Button type="link" onClick={() => navigate(`/workbench/flow/${record.id}`)}>
-          查看详情
-        </Button>
+        <Space>
+          <Button type="link" onClick={() => navigate(`/workbench/flow/${record.id}`)}>
+            查看详情
+          </Button>
+          {record.shuttleType === 'temporary' && record.applicantId === currentUser.userId && (
+            <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record)}>
+              删除
+            </Button>
+          )}
+        </Space>
       ),
     },
   ];
+
+  const currentMonth = new Date().getMonth() + 1;
 
   return (
     <Layout style={{ background: '#fff', borderRadius: 8, minHeight: 'calc(100vh - 104px)' }}>
@@ -150,6 +189,8 @@ const Workbench: React.FC = () => {
               value={searchApplicant}
               onChange={setSearchApplicant}
               options={[
+                { label: '付宇', value: '付宇' },
+                { label: '高成明', value: '高成明' },
                 { label: '张三', value: '张三' },
                 { label: '钱十一', value: '钱十一' },
               ]}
@@ -169,9 +210,11 @@ const Workbench: React.FC = () => {
             />
             <Button onClick={handleSearch}>搜索</Button>
           </Space>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalOpen(true)}>
-            发起申请
-          </Button>
+          {canCreateShuttle && (
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalOpen(true)}>
+              发起申请
+            </Button>
+          )}
         </div>
 
         {/* 申请列表 */}
@@ -198,7 +241,7 @@ const Workbench: React.FC = () => {
           title="创建发布班车"
           open={createModalOpen}
           onOk={handleCreate}
-          onCancel={() => setCreateModalOpen(false)}
+          onCancel={() => { setCreateModalOpen(false); setTempSuffix(''); }}
           confirmLoading={creating}
           okText="确认"
           cancelText="取消"
@@ -209,6 +252,25 @@ const Workbench: React.FC = () => {
               <Radio.Button value="monthly">当月班车</Radio.Button>
               <Radio.Button value="temporary">临时班车</Radio.Button>
             </Radio.Group>
+
+            {shuttleType === 'temporary' && (
+              <div style={{ marginTop: 16 }}>
+                <div style={{ marginBottom: 8, fontWeight: 500 }}>班车名称</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ color: '#8C8C8C', whiteSpace: 'nowrap' }}>{currentMonth}月临时班车-</span>
+                  <Input
+                    placeholder="请输入自定义名称"
+                    value={tempSuffix}
+                    onChange={(e) => setTempSuffix(e.target.value)}
+                    maxLength={30}
+                    style={{ flex: 1 }}
+                  />
+                </div>
+                <div style={{ fontSize: 12, color: '#8C8C8C', marginTop: 4 }}>
+                  完整名称：{currentMonth}月临时班车-{tempSuffix || 'xxx'}
+                </div>
+              </div>
+            )}
           </div>
         </Modal>
       </Content>

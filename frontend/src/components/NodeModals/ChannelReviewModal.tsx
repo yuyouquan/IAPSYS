@@ -8,6 +8,8 @@ import {
   getMaterialData,
   getReviewRecords,
   submitReview,
+  advanceNode,
+  rejectNode,
 } from '../../services/nodeService';
 
 interface ChannelReviewModalProps {
@@ -58,11 +60,15 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
   const handleOpsSubmit = async (data: ReviewFormData) => {
     try {
       await submitReview(nodeData.nodeId, { ...data, comment: `[运营审核] ${data.comment || ''}` });
-      message.success('运营审核提交成功');
-      // Refresh reviews
-      const updated = await getReviewRecords(nodeData.nodeId);
-      setReviews(updated || []);
-      onSubmit(data);
+      if (data.result === 'rejected') {
+        await rejectNode(nodeData.nodeId, 'channel_apply', `运营审核不通过：${data.comment || ''}`);
+        message.success('运营审核已驳回');
+        onSubmit(data);
+      } else {
+        message.success('运营审核提交成功，请等待老板审核');
+        const updated = await getReviewRecords(nodeData.nodeId);
+        setReviews(updated || []);
+      }
     } catch {
       message.error('提交失败');
     }
@@ -71,10 +77,26 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
   const handleBossSubmit = async (data: ReviewFormData) => {
     try {
       await submitReview(nodeData.nodeId, { ...data, comment: `[老板审核] ${data.comment || ''}` });
-      message.success('老板审核提交成功');
-      const updated = await getReviewRecords(nodeData.nodeId);
-      setReviews(updated || []);
-      onSubmit(data);
+      if (data.result === 'rejected') {
+        await rejectNode(nodeData.nodeId, 'channel_apply', `老板审核不通过：${data.comment || ''}`);
+        message.success('老板审核已驳回');
+        onSubmit(data);
+      } else {
+        // 刷新审核记录，检查是否所有老板都已通过
+        const updated = await getReviewRecords(nodeData.nodeId);
+        setReviews(updated || []);
+        const updatedBossReviews = (updated || []).filter((r) => r.reviewType === 'boss_sign');
+        const allBossApproved = BOSS_REVIEWERS.every((boss) =>
+          updatedBossReviews.some((r) => r.reviewerId === boss.id && r.reviewResult === 'approved'),
+        );
+        if (allBossApproved) {
+          await advanceNode(nodeData.nodeId);
+          message.success('所有老板审核通过，已推进到物料上传');
+          onSubmit(data);
+        } else {
+          message.success('老板审核提交成功，等待其他老板审核');
+        }
+      }
     } catch {
       message.error('提交失败');
     }
@@ -101,6 +123,7 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
               reviews={opsReviews}
               onSubmit={handleOpsSubmit}
               disabled={isCompleted || opsApproved}
+              showCc
             />
 
             <StickyReviewPanel

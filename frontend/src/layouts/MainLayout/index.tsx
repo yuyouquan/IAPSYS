@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Menu, Badge, Avatar, Dropdown, Space, Spin } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
+import { currentUser } from '../../mocks/data/users';
 
 const { Header, Content } = Layout;
 
@@ -58,8 +59,8 @@ const MainLayout: React.FC = () => {
           </Badge>
           <Dropdown menu={{ items: userMenuItems }}>
             <Space style={{ cursor: 'pointer' }}>
-              <Avatar size={28} style={{ backgroundColor: '#1890FF' }}>张</Avatar>
-              <span>张三</span>
+              <Avatar size={28} style={{ backgroundColor: '#1890FF' }}>{currentUser.name[0]}</Avatar>
+              <span>{currentUser.name}</span>
             </Space>
           </Dropdown>
         </div>
