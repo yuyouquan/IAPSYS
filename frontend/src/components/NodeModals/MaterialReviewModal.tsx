@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Spin, Divider, message } from 'antd';
+import { Modal, Button, Spin, message } from 'antd';
 import type { ProcessNode, ChannelApplyFormData, MaterialFormData, ReviewRecord, ReviewFormData } from '../../types/node';
 import StickyReviewPanel from './shared/StickyReviewPanel';
 import ChannelApplyReadonly from './shared/ChannelApplyReadonly';
@@ -71,37 +71,34 @@ const MaterialReviewModal: React.FC<MaterialReviewModalProps> = ({
       title="物料审核"
       open={visible}
       onCancel={onClose}
-      width={1100}
+      width={1400}
       destroyOnHidden
       footer={<Button onClick={onClose}>关闭</Button>}
       styles={{ body: { padding: 0 } }}
     >
-      <div style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: 48 }}><Spin /></div>
-        ) : (
-          <>
-            {/* Sticky review panel */}
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: 48 }}><Spin /></div>
+      ) : (
+        <div style={{ display: 'flex', maxHeight: '70vh' }}>
+          {/* 左侧：详情 */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+            <ChannelApplyReadonly
+              channelApplyData={channelApplyData}
+              materialData={materialData}
+              defaultTab="material"
+            />
+          </div>
+          {/* 右侧：审核面板 */}
+          <div style={{ width: 420, flexShrink: 0, overflowY: 'auto', borderLeft: '1px solid #f0f0f0', padding: 16 }}>
             <StickyReviewPanel
               title="物料审核"
               reviews={materialReviews}
               onSubmit={handleReviewSubmit}
               disabled={isCompleted}
             />
-
-            <Divider style={{ margin: '0 16px', width: 'auto' }} />
-
-            {/* Detail content - default to material tab */}
-            <div style={{ padding: 16 }}>
-              <ChannelApplyReadonly
-                channelApplyData={channelApplyData}
-                materialData={materialData}
-                defaultTab="material"
-              />
-            </div>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </Modal>
   );
 };

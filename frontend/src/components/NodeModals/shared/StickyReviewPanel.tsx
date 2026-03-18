@@ -68,11 +68,8 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
   return (
     <div
       style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 10,
         background: '#fff',
-        borderBottom: '1px solid #f0f0f0',
+        marginBottom: 16,
         padding: 16,
       }}
     >
@@ -80,29 +77,51 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
         {counterSign && counterSignReviewers.length > 0 && (
           <div style={{ marginBottom: 12 }}>
             <Text type="secondary">会签审核人：</Text>
-            <Space wrap style={{ marginTop: 4 }}>
+            <div style={{ marginTop: 8 }}>
               {counterSignReviewers.map((r) => {
                 const status = getReviewerStatus(r.id);
+                const record = reviews.find((rv) => rv.reviewerId === r.id);
                 return (
-                  <Tag
+                  <div
                     key={r.id}
-                    icon={
-                      status === 'approved' ? <CheckCircleOutlined /> :
-                      status === 'rejected' ? <CloseCircleOutlined /> :
-                      <ClockCircleOutlined />
-                    }
-                    color={
-                      status === 'approved' ? 'success' :
-                      status === 'rejected' ? 'error' :
-                      'default'
-                    }
+                    style={{
+                      padding: '8px 12px',
+                      marginBottom: 8,
+                      background: status === 'approved' ? '#f6ffed' : status === 'rejected' ? '#fff2f0' : '#fafafa',
+                      borderRadius: 6,
+                      border: `1px solid ${status === 'approved' ? '#b7eb8f' : status === 'rejected' ? '#ffccc7' : '#f0f0f0'}`,
+                    }}
                   >
-                    {r.name}
-                    {status === 'approved' ? ' 已通过' : status === 'rejected' ? ' 已拒绝' : ' 待审核'}
-                  </Tag>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Tag
+                        icon={
+                          status === 'approved' ? <CheckCircleOutlined /> :
+                          status === 'rejected' ? <CloseCircleOutlined /> :
+                          <ClockCircleOutlined />
+                        }
+                        color={
+                          status === 'approved' ? 'success' :
+                          status === 'rejected' ? 'error' :
+                          'default'
+                        }
+                      >
+                        {r.name}
+                        {status === 'approved' ? ' 已通过' : status === 'rejected' ? ' 已拒绝' : ' 待审核'}
+                      </Tag>
+                      {record?.reviewTime && (
+                        <Text type="secondary" style={{ fontSize: 12 }}>{record.reviewTime}</Text>
+                      )}
+                    </div>
+                    {record?.reviewComment && (
+                      <div style={{ marginTop: 6, paddingLeft: 4 }}>
+                        <Text type="secondary" style={{ fontSize: 12 }}>审核意见：</Text>
+                        <Text style={{ fontSize: 13 }}>{record.reviewComment}</Text>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
-            </Space>
+            </div>
           </div>
         )}
 
