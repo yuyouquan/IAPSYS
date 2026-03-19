@@ -4,13 +4,13 @@ export const mockApps: AppRecord[] = [
   {
     id: 'APP-001', flowId: 'FLOW-001', appIcon: '', appName: 'Weather Pro',
     packageName: 'com.transsion.weather', appType: 'Weather', versionCode: 'v2.1.0',
-    currentNode: 'gray_monitor', currentNodeStatus: 'completed', operator: '郑十',
+    currentNode: 'gray_monitor', currentNodeStatus: 'completed', operator: '付宇',
     createdAt: '2026-03-01T14:00:00Z',
   },
   {
     id: 'APP-002', flowId: 'FLOW-001', appIcon: '', appName: 'HiOS Launcher',
     packageName: 'com.transsion.launcher', appType: 'Entertainment', versionCode: 'v5.0.1',
-    currentNode: 'channel_review', currentNodeStatus: 'processing', operator: '李四',
+    currentNode: 'channel_review', currentNodeStatus: 'processing', operator: '付宇',
     createdAt: '2026-03-02T09:00:00Z',
   },
   {
@@ -23,7 +23,7 @@ export const mockApps: AppRecord[] = [
   {
     id: 'APP-004', flowId: 'FLOW-001', appIcon: '', appName: 'Smart Finance',
     packageName: 'com.transsion.finance', appType: 'Finance', versionCode: 'v1.5.0',
-    currentNode: 'biz_test', currentNodeStatus: 'processing', operator: '吴九',
+    currentNode: 'biz_test', currentNodeStatus: 'processing', operator: '付宇',
     createdAt: '2026-03-03T11:00:00Z',
   },
   {
@@ -36,7 +36,7 @@ export const mockApps: AppRecord[] = [
   {
     id: 'APP-006', flowId: 'FLOW-001', appIcon: '', appName: 'Smart Health',
     packageName: 'com.transsion.health', appType: 'Medical', versionCode: 'v1.0.0',
-    currentNode: 'app_publish', currentNodeStatus: 'processing', operator: '周八',
+    currentNode: 'app_publish', currentNodeStatus: 'processing', operator: '付宇',
     createdAt: '2026-03-05T09:00:00Z',
   },
   {
@@ -48,13 +48,13 @@ export const mockApps: AppRecord[] = [
   {
     id: 'APP-008', flowId: 'FLOW-002', appIcon: '', appName: 'Phoenix Browser',
     packageName: 'com.transsion.browser', appType: 'Travel & Local', versionCode: 'v6.2.0',
-    currentNode: 'material_review', currentNodeStatus: 'processing', operator: '李四',
+    currentNode: 'material_review', currentNodeStatus: 'processing', operator: '付宇',
     createdAt: '2026-03-05T11:00:00Z',
   },
   {
     id: 'APP-009', flowId: 'FLOW-002', appIcon: '', appName: 'CarlCare',
     packageName: 'com.transsion.carlcare', appType: 'Business', versionCode: 'v3.5.0',
-    currentNode: 'channel_review', currentNodeStatus: 'processing', operator: '李四',
+    currentNode: 'channel_review', currentNodeStatus: 'processing', operator: '付宇',
     createdAt: '2026-03-05T11:30:00Z',
   },
 ];

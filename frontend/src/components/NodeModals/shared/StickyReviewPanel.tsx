@@ -8,17 +8,12 @@ const { Text } = Typography;
 
 /** 可选的抄送人员列表 */
 const CC_PERSON_OPTIONS = [
-  { label: '付宇', value: 'U010' },
-  { label: '高成明', value: 'U011' },
-  { label: '张三', value: 'U001' },
-  { label: '李四', value: 'U002' },
-  { label: '王五', value: 'U003' },
-  { label: '赵六', value: 'U004' },
-  { label: '孙七', value: 'U005' },
-  { label: '周八', value: 'U006' },
-  { label: '吴九', value: 'U007' },
-  { label: '郑十', value: 'U008' },
-  { label: '钱十一', value: 'U009' },
+  { label: '付宇', value: 'U001' },
+  { label: '高明成', value: 'U002' },
+  { label: '陈睿', value: 'U003' },
+  { label: '朱锐', value: 'U004' },
+  { label: '张三', value: 'U005' },
+  { label: '李四', value: 'U006' },
 ];
 
 interface StickyReviewPanelProps {

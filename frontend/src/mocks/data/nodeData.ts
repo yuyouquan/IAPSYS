@@ -332,25 +332,25 @@ export const mockMaterialData: Record<string, MaterialFormData[]> = {
 export const mockReviewRecords: Record<string, ReviewRecord[]> = {
   // APP-001 的通道发布审核（已完成）
   'APP-001-N002': [
-    { reviewId: 'REV-001', nodeId: 'APP-001-N002', reviewType: 'ops_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: 'approved', reviewComment: '信息完整，审核通过', reviewTime: '2026-03-02T10:00:00Z' },
-    { reviewId: 'REV-002', nodeId: 'APP-001-N002', reviewType: 'boss_sign', reviewerId: 'BOSS-001', reviewerName: '老板A', reviewResult: 'approved', reviewComment: '同意发布', reviewTime: '2026-03-02T14:00:00Z' },
-    { reviewId: 'REV-003', nodeId: 'APP-001-N002', reviewType: 'boss_sign', reviewerId: 'BOSS-002', reviewerName: '老板B', reviewResult: 'approved', reviewComment: '', reviewTime: '2026-03-02T15:30:00Z' },
+    { reviewId: 'REV-001', nodeId: 'APP-001-N002', reviewType: 'ops_review', reviewerId: 'U001', reviewerName: '付宇', reviewResult: 'approved', reviewComment: '信息完整，审核通过', reviewTime: '2026-03-02T10:00:00Z' },
+    { reviewId: 'REV-002', nodeId: 'APP-001-N002', reviewType: 'boss_sign', reviewerId: 'U003', reviewerName: '陈睿', reviewResult: 'approved', reviewComment: '同意发布', reviewTime: '2026-03-02T14:00:00Z' },
+    { reviewId: 'REV-003', nodeId: 'APP-001-N002', reviewType: 'boss_sign', reviewerId: 'U004', reviewerName: '朱锐', reviewResult: 'approved', reviewComment: '', reviewTime: '2026-03-02T15:30:00Z' },
   ],
   // APP-001 的物料审核（已完成）
   'APP-001-N004': [
-    { reviewId: 'REV-004', nodeId: 'APP-001-N004', reviewType: 'material_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: 'approved', reviewComment: '物料符合要求', reviewTime: '2026-03-03T09:00:00Z' },
+    { reviewId: 'REV-004', nodeId: 'APP-001-N004', reviewType: 'material_review', reviewerId: 'U001', reviewerName: '付宇', reviewResult: 'approved', reviewComment: '物料符合要求', reviewTime: '2026-03-03T09:00:00Z' },
   ],
   // APP-002 的通道发布审核（运营已通过，老板待审核）
   'APP-002-N002': [
-    { reviewId: 'REV-005', nodeId: 'APP-002-N002', reviewType: 'ops_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: null, reviewComment: undefined, reviewTime: null },
+    { reviewId: 'REV-005', nodeId: 'APP-002-N002', reviewType: 'ops_review', reviewerId: 'U001', reviewerName: '付宇', reviewResult: null, reviewComment: undefined, reviewTime: null },
   ],
   // APP-008 的物料审核（进行中）
   'APP-008-N004': [
-    { reviewId: 'REV-006', nodeId: 'APP-008-N004', reviewType: 'material_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: null, reviewComment: undefined, reviewTime: null },
+    { reviewId: 'REV-006', nodeId: 'APP-008-N004', reviewType: 'material_review', reviewerId: 'U001', reviewerName: '付宇', reviewResult: null, reviewComment: undefined, reviewTime: null },
   ],
   // APP-009 的通道发布审核（进行中）
   'APP-009-N002': [
-    { reviewId: 'REV-007', nodeId: 'APP-009-N002', reviewType: 'ops_review', reviewerId: 'U002', reviewerName: '李四', reviewResult: null, reviewComment: undefined, reviewTime: null },
+    { reviewId: 'REV-007', nodeId: 'APP-009-N002', reviewType: 'ops_review', reviewerId: 'U001', reviewerName: '付宇', reviewResult: null, reviewComment: undefined, reviewTime: null },
   ],
 };
 

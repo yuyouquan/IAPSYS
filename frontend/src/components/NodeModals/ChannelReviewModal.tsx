@@ -11,6 +11,8 @@ import {
   advanceNode,
   rejectNode,
 } from '../../services/nodeService';
+import { currentUser } from '../../mocks/data/users';
+import { NODE_CONFIG } from '../../constants/enums';
 
 interface ChannelReviewModalProps {
   visible: boolean;
@@ -20,8 +22,8 @@ interface ChannelReviewModalProps {
 }
 
 const BOSS_REVIEWERS = [
-  { id: 'BOSS-001', name: '老板A' },
-  { id: 'BOSS-002', name: '老板B' },
+  { id: 'U003', name: '陈睿' },
+  { id: 'U004', name: '朱锐' },
 ];
 
 const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
@@ -52,6 +54,7 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
       .finally(() => setLoading(false));
   }, [visible, nodeData.nodeId]);
 
+  const hasPermission = NODE_CONFIG[nodeData.nodeType].editRoles.includes(currentUser.role);
   const isCompleted = nodeData.nodeStatus === 'completed';
   const opsReviews = reviews.filter((r) => r.reviewType === 'ops_review');
   const bossReviews = reviews.filter((r) => r.reviewType === 'boss_sign');
@@ -130,14 +133,14 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
               title="运营审核"
               reviews={opsReviews}
               onSubmit={handleOpsSubmit}
-              disabled={isCompleted || opsApproved}
+              disabled={!hasPermission || isCompleted || opsApproved}
               showCc
             />
             <StickyReviewPanel
               title="老板审核（会签）"
               reviews={bossReviews}
               onSubmit={handleBossSubmit}
-              disabled={isCompleted || !opsApproved}
+              disabled={!hasPermission || isCompleted || !opsApproved}
               counterSign
               counterSignReviewers={BOSS_REVIEWERS}
             />

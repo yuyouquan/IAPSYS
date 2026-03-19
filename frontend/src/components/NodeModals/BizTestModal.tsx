@@ -3,6 +3,8 @@ import { Modal, Button, Space, Radio, Input, Divider, Typography, message } from
 import type { ProcessNode, ExternalPlatformData } from '../../types/node';
 import ExternalDataDisplay from './shared/ExternalDataDisplay';
 import { getExternalData, rejectNode } from '../../services/nodeService';
+import { currentUser } from '../../mocks/data/users';
+import { NODE_CONFIG } from '../../constants/enums';
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -22,7 +24,8 @@ const BizTestModal: React.FC<BizTestModalProps> = ({
   onClose,
   onSubmit,
 }) => {
-  const isEditable = nodeData.nodeStatus === 'processing' || nodeData.nodeStatus === 'rejected';
+  const hasPermission = NODE_CONFIG[nodeData.nodeType].editRoles.includes(currentUser.role);
+  const isEditable = hasPermission && (nodeData.nodeStatus === 'processing' || nodeData.nodeStatus === 'rejected');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ExternalPlatformData | null>(null);
   const [rejectTarget, setRejectTarget] = useState<RejectTarget | null>(null);

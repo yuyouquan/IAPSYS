@@ -42,7 +42,7 @@ const MainLayout: React.FC = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ fontSize: 18, fontWeight: 600, marginRight: 48, color: '#1890FF' }}>
-            IAPSYS
+            独立应用发布系统
           </span>
           <Menu
             mode="horizontal"

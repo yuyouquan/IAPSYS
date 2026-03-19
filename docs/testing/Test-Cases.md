@@ -1,6 +1,6 @@
-# IAPSYS 独立应用发布系统 - 测试用例文档
+# 独立应用发布系统 - 测试用例文档
 
-> **项目名称**: IAPSYS (Independent Application Publishing System)
+> **项目名称**: 独立应用发布系统 (Independent Application Publishing System)
 > **版本**: v1.0
 > **编写日期**: 2026-03-09
 > **编写人**: 测试工程师

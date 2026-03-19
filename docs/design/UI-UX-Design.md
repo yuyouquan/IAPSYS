@@ -1,4 +1,4 @@
-# IAPSYS 独立应用发布系统 — UI/UX 设计文档
+# 独立应用发布系统 — UI/UX 设计文档
 
 > 版本：v1.0.0
 > 技术栈：React 18 + Ant Design 5.x
@@ -165,7 +165,7 @@ export default themeConfig;
 ### 2.1 页面层级关系
 
 ```
-IAPSYS 独立应用发布系统
+独立应用发布系统
 ├── 全局导航（Header）
 │   ├── Logo + 系统名称
 │   ├── 一级导航菜单
@@ -274,7 +274,7 @@ const routes = [
 ```
 +----------------------------------------------------------+
 |  Header (56px)                                           |
-|  [Logo IAPSYS]  [工作台] [看板]        [通知🔔] [用户▼]  |
+|  [Logo 独立应用发布系统]  [工作台] [看板]        [通知🔔] [用户▼]  |
 +----------------------------------------------------------+
 |                                                          |
 |  Content (calc(100vh - 56px))                            |
@@ -309,7 +309,7 @@ const { Header, Content } = Layout;
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img src={logo} style={{ height: 32, marginRight: 12 }} />
       <span style={{ fontSize: 18, fontWeight: 600, marginRight: 48 }}>
-        IAPSYS
+        独立应用发布系统
       </span>
       <Menu
         mode="horizontal"

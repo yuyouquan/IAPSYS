@@ -190,9 +190,9 @@ const Workbench: React.FC = () => {
               onChange={setSearchApplicant}
               options={[
                 { label: '付宇', value: '付宇' },
-                { label: '高成明', value: '高成明' },
-                { label: '张三', value: '张三' },
-                { label: '钱十一', value: '钱十一' },
+                { label: '高明成', value: '高明成' },
+                { label: '陈睿', value: '陈睿' },
+                { label: '朱锐', value: '朱锐' },
               ]}
             />
             <RangePicker style={{ width: 260 }} placeholder={['开始日期', '结束日期']} />

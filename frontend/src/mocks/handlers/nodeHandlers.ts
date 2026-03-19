@@ -11,13 +11,13 @@ import { mockApps } from '../data/apps';
 
 /** 节点类型顺序，用于推进/回退 */
 const NODE_TYPES: { type: NodeType; ownerName: string }[] = [
-  { type: 'channel_apply',   ownerName: '张三' },
-  { type: 'channel_review',  ownerName: '李四' },
-  { type: 'material_upload', ownerName: '孙七' },
-  { type: 'material_review', ownerName: '李四' },
-  { type: 'app_publish',     ownerName: '周八' },
-  { type: 'biz_test',        ownerName: '吴九' },
-  { type: 'gray_monitor',    ownerName: '郑十' },
+  { type: 'channel_apply',   ownerName: '张三' },   // 应用创建申请人
+  { type: 'channel_review',  ownerName: '付宇' },   // 通道运营人员
+  { type: 'material_upload', ownerName: '张三' },   // 应用创建申请人
+  { type: 'material_review', ownerName: '付宇' },   // 通道运营人员
+  { type: 'app_publish',     ownerName: '付宇' },   // 通道运营人员
+  { type: 'biz_test',        ownerName: '付宇' },   // 通道运营人员
+  { type: 'gray_monitor',    ownerName: '付宇' },   // 通道运营人员
 ];
 
 /**

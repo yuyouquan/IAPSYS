@@ -10,6 +10,8 @@ import {
   submitMaterials,
   advanceNode,
 } from '../../services/nodeService';
+import { currentUser } from '../../mocks/data/users';
+import { NODE_CONFIG } from '../../constants/enums';
 
 interface MaterialUploadModalProps {
   visible: boolean;
@@ -32,7 +34,8 @@ const MaterialUploadModal: React.FC<MaterialUploadModalProps> = ({
   const [isGpPublish, setIsGpPublish] = useState(false);
   const [gpLink, setGpLink] = useState('');
 
-  const isEditable = nodeData.nodeStatus === 'processing' || nodeData.nodeStatus === 'rejected';
+  const hasPermission = NODE_CONFIG[nodeData.nodeType].editRoles.includes(currentUser.role);
+  const isEditable = hasPermission && (nodeData.nodeStatus === 'processing' || nodeData.nodeStatus === 'rejected');
 
   useEffect(() => {
     if (!visible) return;

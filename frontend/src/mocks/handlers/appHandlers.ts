@@ -6,13 +6,13 @@ import type { AppRecord } from '../../types/app';
 import type { NodeType, NodeStatus } from '../../types/node';
 
 const NODE_TYPES: { type: NodeType; name: string; ownerId: string; ownerName: string }[] = [
-  { type: 'channel_apply',   name: '通道发布申请', ownerId: 'U001', ownerName: '张三' },
-  { type: 'channel_review',  name: '通道发布审核', ownerId: 'U002', ownerName: '李四' },
-  { type: 'material_upload', name: '物料上传',     ownerId: 'U005', ownerName: '孙七' },
-  { type: 'material_review', name: '物料审核',     ownerId: 'U002', ownerName: '李四' },
-  { type: 'app_publish',     name: '应用上架',     ownerId: 'U006', ownerName: '周八' },
-  { type: 'biz_test',        name: '业务内测',     ownerId: 'U007', ownerName: '吴九' },
-  { type: 'gray_monitor',    name: '灰度监控',     ownerId: 'U008', ownerName: '郑十' },
+  { type: 'channel_apply',   name: '通道发布申请', ownerId: 'U005', ownerName: '张三' },   // 应用创建申请人
+  { type: 'channel_review',  name: '通道发布审核', ownerId: 'U001', ownerName: '付宇' },   // 通道运营人员
+  { type: 'material_upload', name: '物料上传',     ownerId: 'U005', ownerName: '张三' },   // 应用创建申请人
+  { type: 'material_review', name: '物料审核',     ownerId: 'U001', ownerName: '付宇' },   // 通道运营人员
+  { type: 'app_publish',     name: '应用上架',     ownerId: 'U001', ownerName: '付宇' },   // 通道运营人员
+  { type: 'biz_test',        name: '业务内测',     ownerId: 'U001', ownerName: '付宇' },   // 通道运营人员
+  { type: 'gray_monitor',    name: '灰度监控',     ownerId: 'U001', ownerName: '付宇' },   // 通道运营人员
 ];
 
 /** 根据应用的当前节点和状态，推导出7个节点各自应有的状态 */

@@ -165,13 +165,13 @@ export const NODE_CONFIG: Record<NodeType, {
   defaultSection: 'basic' | 'material';
   editRoles: UserRole[];
 }> = {
-  channel_apply:    { name: '通道发布申请', order: 1, defaultSection: 'basic',    editRoles: ['R01', 'R08'] },
-  channel_review:   { name: '通道发布审核', order: 2, defaultSection: 'basic',    editRoles: ['R02', 'R03', 'R08'] },
-  material_upload:  { name: '物料上传',     order: 3, defaultSection: 'material', editRoles: ['R04', 'R08'] },
-  material_review:  { name: '物料审核',     order: 4, defaultSection: 'material', editRoles: ['R02', 'R08'] },
-  app_publish:      { name: '应用上架',     order: 5, defaultSection: 'basic',    editRoles: ['R05', 'R08'] },
-  biz_test:         { name: '业务内测',     order: 6, defaultSection: 'basic',    editRoles: ['R06', 'R08'] },
-  gray_monitor:     { name: '灰度监控',     order: 7, defaultSection: 'basic',    editRoles: ['R07', 'R08'] },
+  channel_apply:    { name: '通道发布申请', order: 1, defaultSection: 'basic',    editRoles: ['R01'] },          // 应用创建申请人
+  channel_review:   { name: '通道发布审核', order: 2, defaultSection: 'basic',    editRoles: ['R02', 'R03'] },   // 通道运营人员 + 老板
+  material_upload:  { name: '物料上传',     order: 3, defaultSection: 'material', editRoles: ['R01'] },          // 应用创建申请人
+  material_review:  { name: '物料审核',     order: 4, defaultSection: 'material', editRoles: ['R02'] },          // 通道运营人员
+  app_publish:      { name: '应用上架',     order: 5, defaultSection: 'basic',    editRoles: ['R02'] },          // 通道运营人员
+  biz_test:         { name: '业务内测',     order: 6, defaultSection: 'basic',    editRoles: ['R01', 'R02'] },   // 应用创建申请人 + 通道运营人员
+  gray_monitor:     { name: '灰度监控',     order: 7, defaultSection: 'basic',    editRoles: ['R01', 'R02'] },   // 应用创建申请人 + 通道运营人员
 };
 
 export const NODE_STATUS_COLOR = {

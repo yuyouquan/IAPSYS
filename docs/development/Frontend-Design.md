@@ -1,4 +1,4 @@
-# IAPSYS 独立应用发布系统 — 前端开发设计文档
+# 独立应用发布系统 — 前端开发设计文档
 
 > 版本：v1.0.0
 > 技术栈：React 18 + TypeScript + Ant Design 5.x + Vite + Zustand + React Router 6 + MSW

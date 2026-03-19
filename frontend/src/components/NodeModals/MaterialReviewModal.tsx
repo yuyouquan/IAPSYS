@@ -11,6 +11,8 @@ import {
   advanceNode,
   rejectNode,
 } from '../../services/nodeService';
+import { currentUser } from '../../mocks/data/users';
+import { NODE_CONFIG } from '../../constants/enums';
 
 interface MaterialReviewModalProps {
   visible: boolean;
@@ -47,6 +49,7 @@ const MaterialReviewModal: React.FC<MaterialReviewModalProps> = ({
       .finally(() => setLoading(false));
   }, [visible, nodeData.nodeId]);
 
+  const hasPermission = NODE_CONFIG[nodeData.nodeType].editRoles.includes(currentUser.role);
   const isCompleted = nodeData.nodeStatus === 'completed';
   const materialReviews = reviews.filter((r) => r.reviewType === 'material_review');
 
@@ -94,7 +97,7 @@ const MaterialReviewModal: React.FC<MaterialReviewModalProps> = ({
               title="物料审核"
               reviews={materialReviews}
               onSubmit={handleReviewSubmit}
-              disabled={isCompleted}
+              disabled={!hasPermission || isCompleted}
             />
           </div>
         </div>

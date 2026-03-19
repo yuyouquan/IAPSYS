@@ -1,20 +1,15 @@
 import type { UserInfo } from '../../types/user';
 
 export const mockUsers: UserInfo[] = [
-  { userId: 'U010', name: '付宇', role: 'R08', roleName: '管理员' },
-  { userId: 'U011', name: '高成明', role: 'R08', roleName: '管理员' },
-  { userId: 'U001', name: '张三', role: 'R01', roleName: '需求方' },
-  { userId: 'U002', name: '李四', role: 'R02', roleName: '运营人员' },
-  { userId: 'U003', name: '王五', role: 'R03', roleName: '管理层' },
-  { userId: 'U004', name: '赵六', role: 'R03', roleName: '管理层' },
-  { userId: 'U005', name: '孙七', role: 'R04', roleName: '物料上传者' },
-  { userId: 'U006', name: '周八', role: 'R05', roleName: '上架操作员' },
-  { userId: 'U007', name: '吴九', role: 'R06', roleName: '测试人员' },
-  { userId: 'U008', name: '郑十', role: 'R07', roleName: '灰度监控员' },
-  { userId: 'U009', name: '钱十一', role: 'R01', roleName: '需求方' },
+  { userId: 'U001', name: '付宇', role: 'R02', roleName: '通道运营人员' },
+  { userId: 'U002', name: '高明成', role: 'R02', roleName: '通道运营人员' },
+  { userId: 'U003', name: '陈睿', role: 'R03', roleName: '老板' },
+  { userId: 'U004', name: '朱锐', role: 'R03', roleName: '老板' },
+  { userId: 'U005', name: '张三', role: 'R01', roleName: '应用创建申请人' },
+  { userId: 'U006', name: '李四', role: 'R01', roleName: '应用创建申请人' },
 ];
 
-/** 班车申请允许发起的人员：管理员(R08) + 管理层(R03) */
-export const SHUTTLE_APPLICANTS = ['U010', 'U011', 'U003', 'U004'];
+/** 班车创建权限：通道运营人员(R02) + 老板(R03) */
+export const SHUTTLE_APPLICANTS = ['U001', 'U002', 'U003', 'U004'];
 
-export const currentUser = mockUsers[0]; // 付宇
+export const currentUser = mockUsers[0]; // 付宇 - 通道运营人员

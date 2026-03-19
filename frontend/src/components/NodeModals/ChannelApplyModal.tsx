@@ -5,6 +5,8 @@ import ChannelApplyForm from './shared/ChannelApplyForm';
 import MaterialForm from './shared/MaterialForm';
 import ChannelApplyReadonly from './shared/ChannelApplyReadonly';
 import { getChannelApplyData, submitChannelApply, advanceNode } from '../../services/nodeService';
+import { currentUser } from '../../mocks/data/users';
+import { NODE_CONFIG } from '../../constants/enums';
 
 interface ChannelApplyModalProps {
   visible: boolean;
@@ -31,7 +33,8 @@ const ChannelApplyModal: React.FC<ChannelApplyModalProps> = ({
   const [gpLink, setGpLink] = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const isEditable = nodeData.nodeStatus === 'processing' || nodeData.nodeStatus === 'rejected';
+  const hasPermission = NODE_CONFIG[nodeData.nodeType].editRoles.includes(currentUser.role);
+  const isEditable = hasPermission && (nodeData.nodeStatus === 'processing' || nodeData.nodeStatus === 'rejected');
   const storageKey = `${STORAGE_PREFIX}${nodeData.nodeId}`;
 
   // Fetch data on mount
