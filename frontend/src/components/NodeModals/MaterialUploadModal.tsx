@@ -10,7 +10,8 @@ import {
   submitMaterials,
   advanceNode,
 } from '../../services/nodeService';
-import { currentUser } from '../../mocks/data/users';
+import { sendFeishuNotification } from '../../services/notificationService';
+import { currentUser, mockUsers } from '../../mocks/data/users';
 import { NODE_CONFIG } from '../../constants/enums';
 
 interface MaterialUploadModalProps {
@@ -96,6 +97,13 @@ const MaterialUploadModal: React.FC<MaterialUploadModalProps> = ({
       await submitMaterials(nodeData.nodeId, materials);
       await advanceNode(nodeData.nodeId);
       message.success('物料提交成功');
+      // 触发点7：通知通道运营人员进行审核
+      const r02Users = mockUsers.filter(u => u.role === 'R02').map(u => u.userId);
+      sendFeishuNotification({
+        type: 'material_upload_submitted',
+        appName: channelApplyData?.appName,
+        recipients: r02Users,
+      }).catch(() => {});
       onSubmit(materials);
     } catch {
       message.error('提交失败');

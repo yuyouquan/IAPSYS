@@ -11,7 +11,8 @@ import {
   advanceNode,
   rejectNode,
 } from '../../services/nodeService';
-import { currentUser } from '../../mocks/data/users';
+import { sendFeishuNotification } from '../../services/notificationService';
+import { currentUser, mockUsers } from '../../mocks/data/users';
 import { NODE_CONFIG } from '../../constants/enums';
 
 interface MaterialReviewModalProps {
@@ -59,9 +60,25 @@ const MaterialReviewModal: React.FC<MaterialReviewModalProps> = ({
       if (data.result === 'approved') {
         await advanceNode(nodeData.nodeId);
         message.success('物料审核通过，已推进到应用上架');
+        // 触发点9：物料审核通过后应用上架结果通知通道运营人员
+        const r02Users = mockUsers.filter(u => u.role === 'R02').map(u => u.userId);
+        sendFeishuNotification({
+          type: 'app_publish_result',
+          appName: channelApplyData?.appName,
+          recipients: r02Users,
+          extra: { result: '已推进到应用上架' },
+        }).catch(() => {});
       } else {
         await rejectNode(nodeData.nodeId, 'material_upload', `物料审核不通过：${data.comment || ''}`);
         message.success('物料审核已驳回');
+        // 触发点8：通知应用创建申请人修改物料
+        const r01Users = mockUsers.filter(u => u.role === 'R01').map(u => u.userId);
+        sendFeishuNotification({
+          type: 'material_review_rejected',
+          appName: channelApplyData?.appName,
+          recipients: r01Users,
+          extra: { reason: data.comment || '' },
+        }).catch(() => {});
       }
       onSubmit(data);
     } catch {

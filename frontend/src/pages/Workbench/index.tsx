@@ -11,7 +11,8 @@ import StatusTag from '../../components/StatusTag';
 import TodoCard from '../../components/TodoCard';
 import { useFlowStore } from '../../stores/flowStore';
 import * as todoService from '../../services/todoService';
-import { currentUser, SHUTTLE_APPLICANTS } from '../../mocks/data/users';
+import { sendFeishuNotification } from '../../services/notificationService';
+import { currentUser, SHUTTLE_APPLICANTS, mockUsers } from '../../mocks/data/users';
 import type { FlowRecord } from '../../types/flow';
 
 const { Content, Sider } = Layout;
@@ -70,8 +71,15 @@ const Workbench: React.FC = () => {
     }
     setCreating(true);
     try {
-      await createShuttle(shuttleType, shuttleType === 'temporary' ? tempSuffix.trim() : undefined);
+      const result = await createShuttle(shuttleType, shuttleType === 'temporary' ? tempSuffix.trim() : undefined);
       message.success('班车创建成功');
+      // 触发点1：通知应用创建申请人添加应用
+      const r01Users = mockUsers.filter(u => u.role === 'R01').map(u => u.userId);
+      sendFeishuNotification({
+        type: 'shuttle_created',
+        shuttleName: result.name,
+        recipients: r01Users,
+      }).catch(() => { /* 通知失败不影响主流程 */ });
       setCreateModalOpen(false);
       setTempSuffix('');
     } catch (err: unknown) {

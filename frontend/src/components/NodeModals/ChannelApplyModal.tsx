@@ -5,7 +5,8 @@ import ChannelApplyForm from './shared/ChannelApplyForm';
 import MaterialForm from './shared/MaterialForm';
 import ChannelApplyReadonly from './shared/ChannelApplyReadonly';
 import { getChannelApplyData, submitChannelApply, advanceNode } from '../../services/nodeService';
-import { currentUser } from '../../mocks/data/users';
+import { sendFeishuNotification } from '../../services/notificationService';
+import { currentUser, mockUsers } from '../../mocks/data/users';
 import { NODE_CONFIG } from '../../constants/enums';
 
 interface ChannelApplyModalProps {
@@ -115,6 +116,13 @@ const ChannelApplyModal: React.FC<ChannelApplyModalProps> = ({
       await advanceNode(nodeData.nodeId);
       localStorage.removeItem(storageKey);
       message.success('通道发布申请提交成功');
+      // 触发点2：通知通道运营人员进行审核
+      const r02Users = mockUsers.filter(u => u.role === 'R02').map(u => u.userId);
+      sendFeishuNotification({
+        type: 'channel_apply_submitted',
+        appName: data.appName,
+        recipients: r02Users,
+      }).catch(() => { /* 通知失败不影响主流程 */ });
       onSubmit(data);
     } catch {
       // validation failed or API error

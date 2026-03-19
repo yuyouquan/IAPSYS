@@ -11,7 +11,8 @@ import {
   advanceNode,
   rejectNode,
 } from '../../services/nodeService';
-import { currentUser } from '../../mocks/data/users';
+import { sendFeishuNotification } from '../../services/notificationService';
+import { currentUser, mockUsers } from '../../mocks/data/users';
 import { NODE_CONFIG } from '../../constants/enums';
 
 interface ChannelReviewModalProps {
@@ -66,9 +67,24 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
       if (data.result === 'rejected') {
         await rejectNode(nodeData.nodeId, 'channel_apply', `运营审核不通过：${data.comment || ''}`);
         message.success('运营审核已驳回');
+        // 触发点3：通知应用创建申请人修改
+        const r01Users = mockUsers.filter(u => u.role === 'R01').map(u => u.userId);
+        sendFeishuNotification({
+          type: 'channel_review_ops_rejected',
+          appName: channelApplyData?.appName,
+          recipients: r01Users,
+          extra: { reason: data.comment || '' },
+        }).catch(() => {});
         onSubmit(data);
       } else {
         message.success('运营审核提交成功，请等待老板审核');
+        // 触发点4：通知老板进行审核
+        const r03Users = mockUsers.filter(u => u.role === 'R03').map(u => u.userId);
+        sendFeishuNotification({
+          type: 'channel_review_ops_approved',
+          appName: channelApplyData?.appName,
+          recipients: r03Users,
+        }).catch(() => {});
         const updated = await getReviewRecords(nodeData.nodeId);
         setReviews(updated || []);
       }
@@ -83,6 +99,14 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
       if (data.result === 'rejected') {
         await rejectNode(nodeData.nodeId, 'channel_apply', `老板审核不通过：${data.comment || ''}`);
         message.success('老板审核已驳回');
+        // 触发点5：通知应用创建申请人修改
+        const r01Users = mockUsers.filter(u => u.role === 'R01').map(u => u.userId);
+        sendFeishuNotification({
+          type: 'channel_review_boss_rejected',
+          appName: channelApplyData?.appName,
+          recipients: r01Users,
+          extra: { reason: data.comment || '' },
+        }).catch(() => {});
         onSubmit(data);
       } else {
         // 刷新审核记录，检查是否所有老板都已通过
@@ -95,6 +119,13 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
         if (allBossApproved) {
           await advanceNode(nodeData.nodeId);
           message.success('所有老板审核通过，已推进到物料上传');
+          // 触发点6：通知应用创建申请人进行物料上传
+          const r01Users = mockUsers.filter(u => u.role === 'R01').map(u => u.userId);
+          sendFeishuNotification({
+            type: 'channel_review_all_approved',
+            appName: channelApplyData?.appName,
+            recipients: r01Users,
+          }).catch(() => {});
           onSubmit(data);
         } else {
           message.success('老板审核提交成功，等待其他老板审核');
