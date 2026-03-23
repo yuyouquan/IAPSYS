@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { mockApps } from '../data/apps';
 import { mockAppVersions } from '../data/nodeData';
-import { currentUser } from '../data/users';
+import { getCurrentUser } from '../../stores/userStore';
 import type { AppRecord } from '../../types/app';
 import type { NodeType, NodeStatus } from '../../types/node';
 
@@ -106,7 +106,7 @@ export const appHandlers = [
           versionCode: '',
           currentNode: 'channel_apply',
           currentNodeStatus: 'processing',
-          operator: currentUser.name,
+          operator: getCurrentUser().name,
           createdAt: new Date().toISOString(),
         });
       }

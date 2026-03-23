@@ -12,7 +12,8 @@ import {
   rejectNode,
 } from '../../services/nodeService';
 import { sendFeishuNotification } from '../../services/notificationService';
-import { currentUser, mockUsers } from '../../mocks/data/users';
+import { mockUsers } from '../../mocks/data/users';
+import { useUserStore } from '../../stores/userStore';
 import { NODE_CONFIG } from '../../constants/enums';
 
 interface MaterialReviewModalProps {
@@ -50,6 +51,7 @@ const MaterialReviewModal: React.FC<MaterialReviewModalProps> = ({
       .finally(() => setLoading(false));
   }, [visible, nodeData.nodeId]);
 
+  const currentUser = useUserStore((s) => s.currentUser);
   const hasPermission = NODE_CONFIG[nodeData.nodeType].editRoles.includes(currentUser.role);
   const isCompleted = nodeData.nodeStatus === 'completed';
   const materialReviews = reviews.filter((r) => r.reviewType === 'material_review');

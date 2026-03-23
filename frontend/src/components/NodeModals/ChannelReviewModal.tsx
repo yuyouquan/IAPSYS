@@ -12,7 +12,8 @@ import {
   rejectNode,
 } from '../../services/nodeService';
 import { sendFeishuNotification } from '../../services/notificationService';
-import { currentUser, mockUsers } from '../../mocks/data/users';
+import { mockUsers } from '../../mocks/data/users';
+import { useUserStore } from '../../stores/userStore';
 import { NODE_CONFIG } from '../../constants/enums';
 
 interface ChannelReviewModalProps {
@@ -55,6 +56,7 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
       .finally(() => setLoading(false));
   }, [visible, nodeData.nodeId]);
 
+  const currentUser = useUserStore((s) => s.currentUser);
   const hasPermission = NODE_CONFIG[nodeData.nodeType].editRoles.includes(currentUser.role);
   const isCompleted = nodeData.nodeStatus === 'completed';
   const opsReviews = reviews.filter((r) => r.reviewType === 'ops_review');
@@ -77,8 +79,8 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
         }).catch(() => {});
         onSubmit(data);
       } else {
-        message.success('运营审核提交成功，请等待老板审核');
-        // 触发点4：通知老板进行审核
+        message.success('运营审核提交成功，请等待业务负责人审核');
+        // 触发点4：通知业务负责人进行审核
         const r03Users = mockUsers.filter(u => u.role === 'R03').map(u => u.userId);
         sendFeishuNotification({
           type: 'channel_review_ops_approved',
@@ -95,10 +97,10 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
 
   const handleBossSubmit = async (data: ReviewFormData) => {
     try {
-      await submitReview(nodeData.nodeId, { ...data, comment: `[老板审核] ${data.comment || ''}` });
+      await submitReview(nodeData.nodeId, { ...data, comment: `[业务负责人审核] ${data.comment || ''}` });
       if (data.result === 'rejected') {
-        await rejectNode(nodeData.nodeId, 'channel_apply', `老板审核不通过：${data.comment || ''}`);
-        message.success('老板审核已驳回');
+        await rejectNode(nodeData.nodeId, 'channel_apply', `业务负责人审核不通过：${data.comment || ''}`);
+        message.success('业务负责人审核已驳回');
         // 触发点5：通知应用创建申请人修改
         const r01Users = mockUsers.filter(u => u.role === 'R01').map(u => u.userId);
         sendFeishuNotification({
@@ -109,7 +111,7 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
         }).catch(() => {});
         onSubmit(data);
       } else {
-        // 刷新审核记录，检查是否所有老板都已通过
+        // 刷新审核记录，检查是否所有业务负责人都已通过
         const updated = await getReviewRecords(nodeData.nodeId);
         setReviews(updated || []);
         const updatedBossReviews = (updated || []).filter((r) => r.reviewType === 'boss_sign');
@@ -118,7 +120,7 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
         );
         if (allBossApproved) {
           await advanceNode(nodeData.nodeId);
-          message.success('所有老板审核通过，已推进到物料上传');
+          message.success('所有业务负责人审核通过，已推进到物料上传');
           // 触发点6：通知应用创建申请人进行物料上传
           const r01Users = mockUsers.filter(u => u.role === 'R01').map(u => u.userId);
           sendFeishuNotification({
@@ -128,7 +130,7 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
           }).catch(() => {});
           onSubmit(data);
         } else {
-          message.success('老板审核提交成功，等待其他老板审核');
+          message.success('业务负责人审核提交成功，等待其他业务负责人审核');
         }
       }
     } catch {
@@ -168,7 +170,7 @@ const ChannelReviewModal: React.FC<ChannelReviewModalProps> = ({
               showCc
             />
             <StickyReviewPanel
-              title="老板审核（会签）"
+              title="业务负责人审核（会签）"
               reviews={bossReviews}
               onSubmit={handleBossSubmit}
               disabled={!hasPermission || isCompleted || !opsApproved}

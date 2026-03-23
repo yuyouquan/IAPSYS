@@ -340,7 +340,7 @@ export const mockReviewRecords: Record<string, ReviewRecord[]> = {
   'APP-001-N004': [
     { reviewId: 'REV-004', nodeId: 'APP-001-N004', reviewType: 'material_review', reviewerId: 'U001', reviewerName: '付宇', reviewResult: 'approved', reviewComment: '物料符合要求', reviewTime: '2026-03-03T09:00:00Z' },
   ],
-  // APP-002 的通道发布审核（运营已通过，老板待审核）
+  // APP-002 的通道发布审核（运营已通过，业务负责人待审核）
   'APP-002-N002': [
     { reviewId: 'REV-005', nodeId: 'APP-002-N002', reviewType: 'ops_review', reviewerId: 'U001', reviewerName: '付宇', reviewResult: null, reviewComment: undefined, reviewTime: null },
   ],

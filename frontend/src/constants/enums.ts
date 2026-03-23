@@ -166,7 +166,7 @@ export const NODE_CONFIG: Record<NodeType, {
   editRoles: UserRole[];
 }> = {
   channel_apply:    { name: '通道发布申请', order: 1, defaultSection: 'basic',    editRoles: ['R01'] },          // 应用创建申请人
-  channel_review:   { name: '通道发布审核', order: 2, defaultSection: 'basic',    editRoles: ['R02', 'R03'] },   // 通道运营人员 + 老板
+  channel_review:   { name: '通道发布审核', order: 2, defaultSection: 'basic',    editRoles: ['R02', 'R03'] },   // 通道运营人员 + 业务负责人
   material_upload:  { name: '物料上传',     order: 3, defaultSection: 'material', editRoles: ['R01'] },          // 应用创建申请人
   material_review:  { name: '物料审核',     order: 4, defaultSection: 'material', editRoles: ['R02'] },          // 通道运营人员
   app_publish:      { name: '应用上架',     order: 5, defaultSection: 'basic',    editRoles: ['R02'] },          // 通道运营人员

@@ -12,17 +12,17 @@ import TodoCard from '../../components/TodoCard';
 import { useFlowStore } from '../../stores/flowStore';
 import * as todoService from '../../services/todoService';
 import { sendFeishuNotification } from '../../services/notificationService';
-import { currentUser, SHUTTLE_APPLICANTS, mockUsers } from '../../mocks/data/users';
+import { SHUTTLE_APPLICANTS, mockUsers } from '../../mocks/data/users';
+import { useUserStore } from '../../stores/userStore';
 import type { FlowRecord } from '../../types/flow';
 
 const { Content, Sider } = Layout;
 const { RangePicker } = DatePicker;
 
-/** 当前用户是否有发起班车申请的权限 */
-const canCreateShuttle = SHUTTLE_APPLICANTS.includes(currentUser.userId);
-
 const Workbench: React.FC = () => {
   const navigate = useNavigate();
+  const currentUser = useUserStore((s) => s.currentUser);
+  const canCreateShuttle = SHUTTLE_APPLICANTS.includes(currentUser.userId);
   const {
     flowList, flowTotal, flowLoading, flowParams,
     fetchFlowList, createShuttle, deleteShuttle, updateFlowParams,

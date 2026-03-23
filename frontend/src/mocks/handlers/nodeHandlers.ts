@@ -106,7 +106,7 @@ export const nodeHandlers = [
       // N002 = channel_review, N004 = material_review
       if (parsed.nodeIndex === 4) {
         reviewType = 'material_review';
-      } else if (body.comment?.startsWith('[老板审核]')) {
+      } else if (body.comment?.startsWith('[业务负责人审核]')) {
         reviewType = 'boss_sign';
       }
     }
@@ -115,7 +115,7 @@ export const nodeHandlers = [
       nodeId,
       reviewType,
       reviewerId: reviewType === 'boss_sign' ? `BOSS-00${mockReviewRecords[nodeId].filter(r => r.reviewType === 'boss_sign').length + 1}` : 'U002',
-      reviewerName: reviewType === 'boss_sign' ? `老板${String.fromCharCode(65 + mockReviewRecords[nodeId].filter(r => r.reviewType === 'boss_sign').length)}` : '李四',
+      reviewerName: reviewType === 'boss_sign' ? `业务负责人${String.fromCharCode(65 + mockReviewRecords[nodeId].filter(r => r.reviewType === 'boss_sign').length)}` : '李四',
       reviewResult: body.result as 'approved' | 'rejected',
       reviewComment: body.comment,
       reviewTime: new Date().toISOString(),

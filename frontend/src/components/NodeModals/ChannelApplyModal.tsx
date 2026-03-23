@@ -6,7 +6,8 @@ import MaterialForm from './shared/MaterialForm';
 import ChannelApplyReadonly from './shared/ChannelApplyReadonly';
 import { getChannelApplyData, submitChannelApply, advanceNode } from '../../services/nodeService';
 import { sendFeishuNotification } from '../../services/notificationService';
-import { currentUser, mockUsers } from '../../mocks/data/users';
+import { mockUsers } from '../../mocks/data/users';
+import { useUserStore } from '../../stores/userStore';
 import { NODE_CONFIG } from '../../constants/enums';
 
 interface ChannelApplyModalProps {
@@ -33,6 +34,7 @@ const ChannelApplyModal: React.FC<ChannelApplyModalProps> = ({
   const [isGpPublish, setIsGpPublish] = useState(false);
   const [gpLink, setGpLink] = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const currentUser = useUserStore((s) => s.currentUser);
 
   const hasPermission = NODE_CONFIG[nodeData.nodeType].editRoles.includes(currentUser.role);
   const isEditable = hasPermission && (nodeData.nodeStatus === 'processing' || nodeData.nodeStatus === 'rejected');

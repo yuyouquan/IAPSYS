@@ -1,15 +1,31 @@
 import { Suspense } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Menu, Badge, Avatar, Dropdown, Space, Spin } from 'antd';
-import { BellOutlined } from '@ant-design/icons';
+import { Layout, Menu, Badge, Avatar, Dropdown, Space, Spin, Select, Tag } from 'antd';
+import { BellOutlined, SwapOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { currentUser } from '../../mocks/data/users';
+import { useUserStore } from '../../stores/userStore';
+import { mockUsers } from '../../mocks/data/users';
 
 const { Header, Content } = Layout;
+
+const ROLE_COLOR: Record<string, string> = {
+  R01: '#52C41A',
+  R02: '#1890FF',
+  R03: '#FA8C16',
+  R08: '#722ED1',
+};
+
+const AVATAR_COLOR: Record<string, string> = {
+  R01: '#52C41A',
+  R02: '#1890FF',
+  R03: '#FA8C16',
+  R08: '#722ED1',
+};
 
 const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { currentUser, setCurrentUser } = useUserStore();
 
   const currentPath = location.pathname.startsWith('/dashboard') ? '/dashboard' : '/workbench';
 
@@ -22,6 +38,42 @@ const MainLayout: React.FC = () => {
     { key: 'profile', label: '个人信息' },
     { key: 'logout', label: '退出登录' },
   ];
+
+  const userOptions = [
+    {
+      label: <span style={{ color: '#52C41A', fontWeight: 500 }}>应用创建申请人 (R01)</span>,
+      title: 'R01',
+      options: mockUsers
+        .filter((u) => u.role === 'R01')
+        .map((u) => ({ label: u.name, value: u.userId })),
+    },
+    {
+      label: <span style={{ color: '#1890FF', fontWeight: 500 }}>通道运营人员 (R02)</span>,
+      title: 'R02',
+      options: mockUsers
+        .filter((u) => u.role === 'R02')
+        .map((u) => ({ label: u.name, value: u.userId })),
+    },
+    {
+      label: <span style={{ color: '#FA8C16', fontWeight: 500 }}>业务负责人 (R03)</span>,
+      title: 'R03',
+      options: mockUsers
+        .filter((u) => u.role === 'R03')
+        .map((u) => ({ label: u.name, value: u.userId })),
+    },
+    {
+      label: <span style={{ color: '#722ED1', fontWeight: 500 }}>管理员 (R08)</span>,
+      title: 'R08',
+      options: mockUsers
+        .filter((u) => u.role === 'R08')
+        .map((u) => ({ label: u.name, value: u.userId })),
+    },
+  ];
+
+  const handleSwitchUser = (userId: string) => {
+    const user = mockUsers.find((u) => u.userId === userId);
+    if (user) setCurrentUser(user);
+  };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -53,14 +105,49 @@ const MainLayout: React.FC = () => {
           />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {/* 角色切换 */}
+          <Select
+            value={currentUser.userId}
+            onChange={handleSwitchUser}
+            options={userOptions}
+            style={{ width: 200 }}
+            suffixIcon={<SwapOutlined />}
+            optionRender={(option) => {
+              const user = mockUsers.find((u) => u.userId === option.value);
+              if (!user) return option.label;
+              return (
+                <Space>
+                  <Avatar size={20} style={{ backgroundColor: AVATAR_COLOR[user.role], fontSize: 12 }}>
+                    {user.name[0]}
+                  </Avatar>
+                  <span>{user.name}</span>
+                  <Tag
+                    color={ROLE_COLOR[user.role]}
+                    style={{ marginInlineEnd: 0, fontSize: 11, lineHeight: '18px', padding: '0 4px' }}
+                  >
+                    {user.role}
+                  </Tag>
+                </Space>
+              );
+            }}
+          />
+
           <Badge count={5} size="small">
             <BellOutlined style={{ fontSize: 18, cursor: 'pointer' }} />
           </Badge>
           <Dropdown menu={{ items: userMenuItems }}>
             <Space style={{ cursor: 'pointer' }}>
-              <Avatar size={28} style={{ backgroundColor: '#1890FF' }}>{currentUser.name[0]}</Avatar>
+              <Avatar size={28} style={{ backgroundColor: AVATAR_COLOR[currentUser.role] }}>
+                {currentUser.name[0]}
+              </Avatar>
               <span>{currentUser.name}</span>
+              <Tag
+                color={ROLE_COLOR[currentUser.role]}
+                style={{ marginInlineEnd: 0, fontSize: 11, lineHeight: '20px' }}
+              >
+                {currentUser.roleName}
+              </Tag>
             </Space>
           </Dropdown>
         </div>

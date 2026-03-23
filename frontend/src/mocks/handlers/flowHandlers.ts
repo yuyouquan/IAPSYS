@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { mockFlows } from '../data/flows';
 import { mockApps } from '../data/apps';
-import { currentUser } from '../data/users';
+import { getCurrentUser } from '../../stores/userStore';
 import type { FlowRecord } from '../../types/flow';
 
 /** 根据实际应用数据动态计算班车状态摘要 */
@@ -91,8 +91,8 @@ export const flowHandlers = [
       id: `FLOW-${Date.now()}`,
       name,
       shuttleType: body.type as FlowRecord['shuttleType'],
-      applicantId: currentUser.userId,
-      applicant: currentUser.name,
+      applicantId: getCurrentUser().userId,
+      applicant: getCurrentUser().name,
       createdAt: now.toISOString(),
       statusSummary: { total: 0, success: 0, processing: 0, rejected: 0 },
     };
