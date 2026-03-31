@@ -9,6 +9,7 @@ export interface FlowRecord {
   applicantId: string;
   applicant: string;
   createdAt: string;
+  expiresAt: string;
   statusSummary: {
     total: number;
     success: number;

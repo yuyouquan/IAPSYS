@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Form, Input, Select, Radio, InputNumber, DatePicker, Descriptions, Tag, Space, Row, Col,
+  Upload, message,
 } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 import type { FormInstance } from 'antd';
+import type { UploadFile } from 'antd/es/upload/interface';
 import dayjs from 'dayjs';
 import TypeSelector from '../../TypeSelector';
 import type { ChannelApplyFormData } from '../../../types/node';
@@ -73,20 +76,18 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
       .map((t) => ({ label: t.label, value: t.value }));
   }, [watchAndroidVersion]);
 
-  const availableVersions = useMemo(() => {
-    return versions
-      .filter((v) => !v.isUsedInCurrentFlow)
-      .map((v) => ({
-        label: `${v.versionCode} (${v.versionName})`,
-        value: v.versionCode,
-      }));
-  }, [versions]);
+  const [apkFileList, setApkFileList] = useState<UploadFile[]>([]);
 
-  const handleVersionChange = (versionCode: string) => {
-    const ver = versions.find((v) => v.versionCode === versionCode);
-    if (ver) {
-      form.setFieldValue('apkUrl', ver.apkUrl);
-    }
+  /** 模拟从 APK 文件中解析版本号 */
+  const parseApkVersion = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      // 模拟解析延迟，实际项目中应调用后端接口解析 APK
+      setTimeout(() => {
+        const versionMatch = file.name.match(/v?([\d.]+)/i);
+        const version = versionMatch ? `v${versionMatch[1]}` : `v${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}`;
+        resolve(version);
+      }, 500);
+    });
   };
 
   const typeSelectorRule = (label: string) => ({
@@ -106,7 +107,7 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
         <Descriptions.Item label="包名">{data.packageName}</Descriptions.Item>
         <Descriptions.Item label="应用类型">{data.appType}</Descriptions.Item>
         <Descriptions.Item label="版本号">{data.versionCode}</Descriptions.Item>
-        <Descriptions.Item label="APK 地址" span={2}>{data.apkUrl}</Descriptions.Item>
+        <Descriptions.Item label="APK 文件" span={2}>{data.apkFileName || '-'}</Descriptions.Item>
         <Descriptions.Item label="测试报告">{data.testReport || '-'}</Descriptions.Item>
         <Descriptions.Item label="应用分类">
           {APP_CATEGORIES.find((c) => c.value === data.appCategory)?.label || data.appCategory}
@@ -154,19 +155,52 @@ const ChannelApplyForm: React.FC<ChannelApplyFormProps> = ({
         </Form.Item>
       </Space>
 
+      <Form.Item
+        label="上传 APK"
+        name="apkFile"
+        rules={[{ required: true, message: '请上传 APK 文件' }]}
+        valuePropName="fileList"
+        getValueFromEvent={(e) => e?.fileList}
+      >
+        <Upload.Dragger
+          accept=".apk"
+          maxCount={1}
+          fileList={apkFileList}
+          beforeUpload={async (file) => {
+            if (!file.name.endsWith('.apk')) {
+              message.error('仅支持上传 .apk 文件');
+              return Upload.LIST_IGNORE;
+            }
+            setApkFileList([{ uid: file.uid, name: file.name, status: 'uploading', originFileObj: file }]);
+            try {
+              const version = await parseApkVersion(file);
+              form.setFieldValue('versionCode', version);
+              form.setFieldValue('apkFileName', file.name);
+              setApkFileList([{ uid: file.uid, name: file.name, status: 'done', originFileObj: file }]);
+            } catch {
+              setApkFileList([{ uid: file.uid, name: file.name, status: 'error', originFileObj: file }]);
+              message.error('APK 解析失败');
+            }
+            return false;
+          }}
+          onRemove={() => {
+            setApkFileList([]);
+            form.setFieldValue('versionCode', undefined);
+            form.setFieldValue('apkFileName', undefined);
+          }}
+        >
+          <p className="ant-upload-drag-icon"><InboxOutlined /></p>
+          <p className="ant-upload-text">点击或拖拽 APK 文件到此区域上传</p>
+          <p className="ant-upload-hint">仅支持 .apk 格式，上传后自动解析版本号</p>
+        </Upload.Dragger>
+      </Form.Item>
+
       <Space size={16} style={{ display: 'flex' }}>
-        <Form.Item label="版本号" name="versionCode" rules={[{ required: true, message: '请选择版本号' }]}>
-          <Select
-            placeholder="请选择版本号"
-            options={availableVersions}
-            onChange={handleVersionChange}
-            style={{ width: 220 }}
-            showSearch
-            optionFilterProp="label"
-          />
+        <Form.Item label="版本号" name="versionCode" rules={[{ required: true, message: '请先上传 APK 文件' }]}>
+          <Input disabled placeholder="上传 APK 后自动解析" style={{ width: 220 }} />
         </Form.Item>
-        <Form.Item label="APK 地址" name="apkUrl" rules={[{ required: true }]}>
-          <Input disabled placeholder="选择版本后自动填入" style={{ width: 440 }} />
+        <Form.Item label="APK 文件名" name="apkFileName" hidden>
+          <Input />
         </Form.Item>
       </Space>
 

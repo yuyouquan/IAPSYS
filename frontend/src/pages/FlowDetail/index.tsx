@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Descriptions, Card, Row, Col, Button, Input, Pagination, Modal,
-  Checkbox, Spin, Tag, Empty, Space, Breadcrumb, message,
+  Checkbox, Spin, Tag, Empty, Space, Breadcrumb, message, Tooltip,
 } from 'antd';
 import { PlusOutlined, SearchOutlined, HomeOutlined, AppstoreOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -71,6 +71,8 @@ const FlowDetail: React.FC = () => {
     } catch { /* ignore */ }
   };
 
+  const isExpired = currentFlow ? dayjs(currentFlow.expiresAt).isBefore(dayjs(), 'day') : false;
+
   if (detailLoading) {
     return <div style={{ textAlign: 'center', paddingTop: 100 }}><Spin size="large" /></div>;
   }
@@ -104,6 +106,14 @@ const FlowDetail: React.FC = () => {
           <Descriptions.Item label="申请时间">
             {currentFlow ? dayjs(currentFlow.createdAt).format('YYYY-MM-DD HH:mm:ss') : '-'}
           </Descriptions.Item>
+          <Descriptions.Item label="有效期">
+            {currentFlow ? (
+              <span style={{ color: isExpired ? '#FF4D4F' : undefined }}>
+                {dayjs(currentFlow.expiresAt).format('YYYY-MM-DD')}
+                {isExpired && <Tag color="error" style={{ marginLeft: 8 }}>已过期</Tag>}
+              </span>
+            ) : '-'}
+          </Descriptions.Item>
         </Descriptions>
       </Card>
 
@@ -122,9 +132,11 @@ const FlowDetail: React.FC = () => {
             />
             <Button onClick={handleSearch}>搜索</Button>
           </Space>
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleOpenAddModal}>
-            添加应用
-          </Button>
+          <Tooltip title={isExpired ? '已过有效期，无法添加应用' : undefined}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={handleOpenAddModal} disabled={isExpired}>
+              添加应用
+            </Button>
+          </Tooltip>
         </div>
 
         {appLoading ? (

@@ -61,7 +61,7 @@ export const flowHandlers = [
   }),
 
   http.post('/api/v1/flows', async ({ request }) => {
-    const body = await request.json() as { type: string; year: number; month: number; suffix?: string };
+    const body = await request.json() as { type: string; year: number; month: number; suffix?: string; expiresAt?: string };
     const now = new Date();
     const year = body.year || now.getFullYear();
     const month = body.month || (now.getMonth() + 1);
@@ -84,6 +84,9 @@ export const flowHandlers = [
       return HttpResponse.json({ code: 1002, message: `班车名称「${name}」已存在，请更换名称`, data: null });
     }
 
+    // 默认有效期：当月月底
+    const defaultExpires = `${year}-${String(month).padStart(2, '0')}-${new Date(year, month, 0).getDate()}`;
+
     const newFlow: FlowRecord = {
       id: `FLOW-${Date.now()}`,
       name,
@@ -91,6 +94,7 @@ export const flowHandlers = [
       applicantId: getCurrentUser().userId,
       applicant: getCurrentUser().name,
       createdAt: now.toISOString(),
+      expiresAt: body.expiresAt || defaultExpires,
       statusSummary: { total: 0, success: 0, processing: 0, rejected: 0 },
     };
 

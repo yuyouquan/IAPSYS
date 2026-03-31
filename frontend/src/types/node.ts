@@ -45,7 +45,7 @@ export interface ChannelApplyFormData {
   packageName: string;
   appType: string;
   versionCode: string;
-  apkUrl: string;
+  apkFileName?: string;
   testReport?: string;
   appCategory: string;
   isSystemApp: boolean;

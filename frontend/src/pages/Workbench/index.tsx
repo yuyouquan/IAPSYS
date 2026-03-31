@@ -33,6 +33,7 @@ const Workbench: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
   const [tempSuffix, setTempSuffix] = useState('');
+  const [expiresAt, setExpiresAt] = useState<dayjs.Dayjs | null>(null);
   const [creating, setCreating] = useState(false);
 
   // 待办状态
@@ -71,9 +72,13 @@ const Workbench: React.FC = () => {
       message.warning('请输入临时班车名称后缀');
       return;
     }
+    if (!expiresAt) {
+      message.warning('请选择有效期');
+      return;
+    }
     setCreating(true);
     try {
-      const result = await createShuttle(shuttleType, selectedYear, selectedMonth, shuttleType === 'temporary' ? tempSuffix.trim() : undefined);
+      const result = await createShuttle(shuttleType, selectedYear, selectedMonth, shuttleType === 'temporary' ? tempSuffix.trim() : undefined, expiresAt.format('YYYY-MM-DD'));
       message.success('班车创建成功');
       // 触发点1：通知应用创建申请人添加应用
       const r01Users = mockUsers.filter(u => u.role === 'R01').map(u => u.userId);
@@ -84,6 +89,7 @@ const Workbench: React.FC = () => {
       }).catch(() => { /* 通知失败不影响主流程 */ });
       setCreateModalOpen(false);
       setTempSuffix('');
+      setExpiresAt(null);
       setSelectedYear(new Date().getFullYear());
       setSelectedMonth(new Date().getMonth() + 1);
     } catch (err: unknown) {
@@ -155,6 +161,21 @@ const Workbench: React.FC = () => {
       width: 180,
       sorter: true,
       render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm'),
+    },
+    {
+      title: '有效期',
+      dataIndex: 'expiresAt',
+      key: 'expiresAt',
+      width: 140,
+      render: (text) => {
+        const expired = dayjs(text).isBefore(dayjs(), 'day');
+        return (
+          <span style={{ color: expired ? '#FF4D4F' : undefined }}>
+            {dayjs(text).format('YYYY-MM-DD')}
+            {expired && <span style={{ fontSize: 12, marginLeft: 4 }}>(已过期)</span>}
+          </span>
+        );
+      },
     },
     {
       title: '操作',
@@ -261,6 +282,7 @@ const Workbench: React.FC = () => {
                 } else {
                   setSelectedMonth(defMonth);
                 }
+                setExpiresAt(dayjs(`${defYear}-${String(defMonth).padStart(2, '0')}-01`).endOf('month'));
                 setCreateModalOpen(true);
               }}
             >
@@ -293,7 +315,7 @@ const Workbench: React.FC = () => {
           title="创建发布班车"
           open={createModalOpen}
           onOk={handleCreate}
-          onCancel={() => { setCreateModalOpen(false); setTempSuffix(''); setSelectedYear(new Date().getFullYear()); setSelectedMonth(new Date().getMonth() + 1); }}
+          onCancel={() => { setCreateModalOpen(false); setTempSuffix(''); setExpiresAt(null); setSelectedYear(new Date().getFullYear()); setSelectedMonth(new Date().getMonth() + 1); }}
           confirmLoading={creating}
           okText="确认"
           cancelText="取消"
@@ -368,6 +390,20 @@ const Workbench: React.FC = () => {
                 </div>
               </div>
             )}
+
+            <div style={{ marginTop: 16 }}>
+              <div style={{ marginBottom: 8, fontWeight: 500 }}>有效期</div>
+              <DatePicker
+                value={expiresAt}
+                onChange={setExpiresAt}
+                placeholder="请选择截止日期"
+                style={{ width: '100%' }}
+                disabledDate={(current) => current && current.isBefore(dayjs(), 'day')}
+              />
+              <div style={{ fontSize: 12, color: '#8C8C8C', marginTop: 4 }}>
+                有效期到期后，班车内将不能再添加新应用
+              </div>
+            </div>
           </div>
         </Modal>
       </Content>
