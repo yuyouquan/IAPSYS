@@ -10,8 +10,8 @@ export async function getFlowDetail(flowId: string): Promise<FlowRecord> {
   return request.get(`/flows/${flowId}`);
 }
 
-export async function createShuttle(type: 'monthly' | 'temporary', suffix?: string): Promise<FlowRecord> {
-  return request.post('/flows', { type, suffix });
+export async function createShuttle(type: 'monthly' | 'temporary', year: number, month: number, suffix?: string): Promise<FlowRecord> {
+  return request.post('/flows', { type, year, month, suffix });
 }
 
 export async function deleteShuttle(flowId: string): Promise<void> {

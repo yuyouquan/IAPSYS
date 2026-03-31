@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>独立应用发布系统 - 业务流程泳道图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8edf3 100%);
+    padding: 30px 20px;
+    min-height: 100vh;
+  }
+  .header {
+    background: linear-gradient(135deg, #0958d9 0%, #1677ff 40%, #4096ff 100%);
+    color: white;
+    padding: 36px 40px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 20px rgba(22, 119, 255, 0.25);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -5%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+    border-radius: 50%;
+  }
+  .header h1 { font-size: 26px; margin-bottom: 6px; font-weight: 700; position: relative; }
+  .header p { opacity: 0.85; font-size: 14px; position: relative; }
+
+  .container {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    max-width: 1500px;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
+
+  svg { display: block; margin: 0 auto; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #555;
+  }
+  .legend-color {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid;
+    flex-shrink: 0;
+  }
+  .l-r01 { background: #f6ffed; border-color: #52c41a; }
+  .l-r02 { background: #e6f4ff; border-color: #1677ff; }
+  .l-r03 { background: #f9f0ff; border-color: #722ed1; }
+  .l-shared { background: #fffbe6; border-color: #faad14; }
+  .l-forward { background: white; border-color: #595959; }
+  .l-reject { background: white; border-color: #ff4d4f; border-style: dashed; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>独立应用发布系统 - 业务流程泳道图</h1>
+  <p>完整业务流程：3 个角色、7 个步骤、从班车创建到灰度发布</p>
+</div>
+
+<div class="container">
+  <!--
+    布局设计（坐标说明）：
+    泳道 R03: y=0..165   R02: y=165..415   R01: y=415..665   驳回通道: y=665..800
+    节点 130x48, 圆角8
+    正向箭头走节点中心右侧(x+15)，驳回走左侧(x-30)独立通道，绝不重合
+  -->
+  <svg width="1400" height="800" viewBox="0 0 1400 800">
+    <defs>
+      <marker id="af" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#595959"/>
+      </marker>
+      <marker id="ag" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#52c41a"/>
+      </marker>
+      <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#ff4d4f"/>
+      </marker>
+      <marker id="ap" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#722ed1"/>
+      </marker>
+      <filter id="sh"><feDropShadow dx="0" dy="1" stdDeviation="3" flood-opacity="0.06"/></filter>
+    </defs>
+
+    <!-- ====== 泳道背景 ====== -->
+    <rect x="0" y="0" width="1400" height="165" fill="#faf5ff" rx="0"/>
+    <rect x="0" y="165" width="1400" height="250" fill="#f0f7ff"/>
+    <rect x="0" y="415" width="1400" height="250" fill="#f0fff4"/>
+    <rect x="0" y="665" width="1400" height="135" fill="#fafafa"/>
+    <!-- 泳道分割线 -->
+    <line x1="0" y1="165" x2="1400" y2="165" stroke="#e0e0e0" stroke-width="1"/>
+    <line x1="0" y1="415" x2="1400" y2="415" stroke="#e0e0e0" stroke-width="1"/>
+    <line x1="0" y1="665" x2="1400" y2="665" stroke="#e0e0e0" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+    <!-- 泳道标签 -->
+    <rect x="0" y="0" width="90" height="165" fill="#ede5fb" rx="0"/>
+    <text x="45" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#722ed1">R03</text>
+    <text x="45" y="78" text-anchor="middle" font-size="11" fill="#722ed1">业务负责人</text>
+    <text x="45" y="98" text-anchor="middle" font-size="10" fill="#9c7ce5">陈睿/朱锐</text>
+
+    <rect x="0" y="165" width="90" height="250" fill="#dbeafe" rx="0"/>
+    <text x="45" y="268" text-anchor="middle" font-size="14" font-weight="700" fill="#1677ff">R02</text>
+    <text x="45" y="291" text-anchor="middle" font-size="11" fill="#1677ff">通道运营</text>
+    <text x="45" y="311" text-anchor="middle" font-size="10" fill="#6eaaff">付宇/高明成</text>
+
+    <rect x="0" y="415" width="90" height="250" fill="#dcfce7" rx="0"/>
+    <text x="45" y="510" text-anchor="middle" font-size="14" font-weight="700" fill="#389e0d">R01</text>
+    <text x="45" y="533" text-anchor="middle" font-size="11" fill="#389e0d">应用创建人</text>
+    <text x="45" y="553" text-anchor="middle" font-size="10" fill="#87d068">张三/李四等</text>
+
+    <!-- ====== 节点 ====== -->
+    <!-- 创建班车 (R02, x=170) -->
+    <g filter="url(#sh)">
+      <rect x="105" y="266" width="130" height="48" rx="8" fill="white" stroke="#1677ff" stroke-width="2"/>
+      <text x="170" y="286" text-anchor="middle" font-size="13" font-weight="600" fill="#0958d9">创建班车</text>
+      <text x="170" y="303" text-anchor="middle" font-size="10" fill="#4096ff">R02/R03</text>
+    </g>
+    <!-- 添加应用 (R01, x=170) -->
+    <g filter="url(#sh)">
+      <rect x="105" y="511" width="130" height="48" rx="8" fill="white" stroke="#52c41a" stroke-width="2"/>
+      <text x="170" y="531" text-anchor="middle" font-size="13" font-weight="600" fill="#389e0d">添加应用</text>
+      <text x="170" y="548" text-anchor="middle" font-size="10" fill="#73d13d">R01</text>
+    </g>
+    <!-- ① 通道申请 (R01, x=355) -->
+    <g filter="url(#sh)">
+      <rect x="290" y="511" width="130" height="48" rx="8" fill="white" stroke="#52c41a" stroke-width="2"/>
+      <text x="355" y="531" text-anchor="middle" font-size="13" font-weight="600" fill="#389e0d">① 通道申请</text>
+      <text x="355" y="548" text-anchor="middle" font-size="10" fill="#73d13d">R01 填写</text>
+    </g>
+    <!-- ② 运营审核 (R02, x=355) -->
+    <g filter="url(#sh)">
+      <rect x="290" y="266" width="130" height="48" rx="8" fill="white" stroke="#fa8c16" stroke-width="2"/>
+      <text x="355" y="286" text-anchor="middle" font-size="13" font-weight="600" fill="#d46b08">② 运营审核</text>
+      <text x="355" y="303" text-anchor="middle" font-size="10" fill="#fa8c16">R02</text>
+    </g>
+    <!-- ② 会签审核 (R03, x=525) -->
+    <g filter="url(#sh)">
+      <rect x="460" y="59" width="130" height="48" rx="8" fill="white" stroke="#722ed1" stroke-width="2"/>
+      <text x="525" y="79" text-anchor="middle" font-size="13" font-weight="600" fill="#531dab">② 会签审核</text>
+      <text x="525" y="96" text-anchor="middle" font-size="10" fill="#9254de">陈睿 + 朱锐</text>
+    </g>
+    <!-- ③ 物料上传 (R01, x=695) -->
+    <g filter="url(#sh)">
+      <rect x="630" y="511" width="130" height="48" rx="8" fill="white" stroke="#52c41a" stroke-width="2"/>
+      <text x="695" y="531" text-anchor="middle" font-size="13" font-weight="600" fill="#389e0d">③ 物料上传</text>
+      <text x="695" y="548" text-anchor="middle" font-size="10" fill="#73d13d">R01</text>
+    </g>
+    <!-- ④ 物料审核 (R02, x=695) -->
+    <g filter="url(#sh)">
+      <rect x="630" y="266" width="130" height="48" rx="8" fill="white" stroke="#fa8c16" stroke-width="2"/>
+      <text x="695" y="286" text-anchor="middle" font-size="13" font-weight="600" fill="#d46b08">④ 物料审核</text>
+      <text x="695" y="303" text-anchor="middle" font-size="10" fill="#fa8c16">R02</text>
+    </g>
+    <!-- ⑤ 应用上架 (R02, x=885) -->
+    <g filter="url(#sh)">
+      <rect x="820" y="266" width="130" height="48" rx="8" fill="white" stroke="#1677ff" stroke-width="2"/>
+      <text x="885" y="286" text-anchor="middle" font-size="13" font-weight="600" fill="#0958d9">⑤ 应用上架</text>
+      <text x="885" y="303" text-anchor="middle" font-size="10" fill="#4096ff">R02</text>
+    </g>
+    <!-- ⑥ 业务内测 (R01+R02, x=885) -->
+    <g filter="url(#sh)">
+      <rect x="820" y="511" width="130" height="48" rx="8" fill="white" stroke="#faad14" stroke-width="2"/>
+      <text x="885" y="531" text-anchor="middle" font-size="13" font-weight="600" fill="#ad6800">⑥ 业务内测</text>
+      <text x="885" y="548" text-anchor="middle" font-size="10" fill="#faad14">R01+R02</text>
+    </g>
+    <!-- ⑦ 灰度监控 (R01+R02, x=1075) -->
+    <g filter="url(#sh)">
+      <rect x="1010" y="511" width="130" height="48" rx="8" fill="white" stroke="#faad14" stroke-width="2"/>
+      <text x="1075" y="531" text-anchor="middle" font-size="13" font-weight="600" fill="#ad6800">⑦ 灰度监控</text>
+      <text x="1075" y="548" text-anchor="middle" font-size="10" fill="#faad14">R01+R02</text>
+    </g>
+    <!-- ✓ 完成 -->
+    <g filter="url(#sh)">
+      <rect x="1210" y="511" width="110" height="48" rx="24" fill="#f6ffed" stroke="#52c41a" stroke-width="2"/>
+      <text x="1265" y="541" text-anchor="middle" font-size="14" font-weight="700" fill="#389e0d">✓ 发布完成</text>
+    </g>
+
+    <!-- ====== 正向箭头（深灰/绿色实线）====== -->
+
+    <!-- F1: 创建班车 → 添加应用 (飞书通知, 紫色点线) -->
+    <path d="M170,314 L170,511" stroke="#722ed1" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#ap)"/>
+    <rect x="178" y="380" width="60" height="18" rx="4" fill="#f9f0ff" stroke="#d3adf7" stroke-width="0.5"/>
+    <text x="208" y="393" text-anchor="middle" font-size="9" fill="#722ed1">飞书通知</text>
+
+    <!-- F2: 添加应用 → 通道申请 -->
+    <path d="M235,535 L290,535" stroke="#595959" stroke-width="1.5" fill="none" marker-end="url(#af)"/>
+
+    <!-- F3: 通道申请 → 运营审核 (向上, x=370) -->
+    <path d="M370,511 L370,314" stroke="#595959" stroke-width="1.5" fill="none" marker-end="url(#af)"/>
+
+    <!-- F4: 运营审核 → 会签 (肘形: 右→上→右) x=445通道 -->
+    <path d="M420,280 L445,280 L445,83 L460,83" stroke="#52c41a" stroke-width="1.8" fill="none" marker-end="url(#ag)"/>
+    <rect x="448" y="175" width="36" height="18" rx="4" fill="#f0fff0" stroke="#b7eb8f" stroke-width="0.5"/>
+    <text x="466" y="188" text-anchor="middle" font-size="9" fill="#52c41a">通过</text>
+
+    <!-- F5: 会签 → 物料上传 (肘形: 右→下→右) x=625通道 -->
+    <path d="M590,83 L625,83 L625,535 L630,535" stroke="#52c41a" stroke-width="1.8" fill="none" marker-end="url(#ag)"/>
+    <rect x="580" y="214" width="52" height="18" rx="4" fill="#f0fff0" stroke="#b7eb8f" stroke-width="0.5"/>
+    <text x="606" y="227" text-anchor="middle" font-size="9" fill="#52c41a">全部通过</text>
+
+    <!-- F6: 物料上传 → 物料审核 (向上, x=710) -->
+    <path d="M710,511 L710,314" stroke="#595959" stroke-width="1.5" fill="none" marker-end="url(#af)"/>
+
+    <!-- F7: 物料审核 → 应用上架 -->
+    <path d="M760,290 L820,290" stroke="#52c41a" stroke-width="1.8" fill="none" marker-end="url(#ag)"/>
+    <rect x="768" y="272" width="36" height="18" rx="4" fill="#f0fff0" stroke="#b7eb8f" stroke-width="0.5"/>
+    <text x="786" y="285" text-anchor="middle" font-size="9" fill="#52c41a">通过</text>
+
+    <!-- F8: 应用上架 → 业务内测 (向下, x=885) -->
+    <path d="M885,314 L885,511" stroke="#595959" stroke-width="1.5" fill="none" marker-end="url(#af)"/>
+
+    <!-- F9: 业务内测 → 灰度监控 -->
+    <path d="M950,535 L1010,535" stroke="#52c41a" stroke-width="1.8" fill="none" marker-end="url(#ag)"/>
+    <rect x="958" y="517" width="36" height="18" rx="4" fill="#f0fff0" stroke="#b7eb8f" stroke-width="0.5"/>
+    <text x="976" y="530" text-anchor="middle" font-size="9" fill="#52c41a">通过</text>
+
+    <!-- F10: 灰度监控 → 完成 -->
+    <path d="M1140,535 L1210,535" stroke="#52c41a" stroke-width="1.8" fill="none" marker-end="url(#ag)"/>
+
+    <!-- ====== 驳回箭头（红色虚线）====== -->
+    <!-- 所有驳回路径走独立通道，不穿过任何节点 -->
+
+    <!-- RA: 运营审核 → 通道申请 (左侧L形, x=260通道) -->
+    <path d="M290,295 L260,295 L260,540 L290,540" stroke="#ff4d4f" stroke-width="1.5" stroke-dasharray="5,4" fill="none" marker-end="url(#ar)"/>
+    <rect x="220" y="410" width="32" height="18" rx="4" fill="#fff1f0" stroke="#ffa39e" stroke-width="0.5"/>
+    <text x="236" y="423" text-anchor="middle" font-size="9" fill="#ff4d4f">驳回</text>
+
+    <!-- RB: 会签 → 通道申请 (远左L形, x=240通道, y=690通道) -->
+    <path d="M460,90 L240,90 L240,690 L340,690 L340,559" stroke="#ff4d4f" stroke-width="1.5" stroke-dasharray="5,4" fill="none" marker-end="url(#ar)"/>
+    <rect x="196" y="385" width="52" height="18" rx="4" fill="#fff1f0" stroke="#ffa39e" stroke-width="0.5"/>
+    <text x="222" y="398" text-anchor="middle" font-size="9" fill="#ff4d4f">任一驳回</text>
+
+    <!-- RC: 物料审核 → 物料上传 (左侧L形, x=600通道) -->
+    <path d="M630,295 L600,295 L600,540 L630,540" stroke="#ff4d4f" stroke-width="1.5" stroke-dasharray="5,4" fill="none" marker-end="url(#ar)"/>
+    <rect x="560" y="410" width="32" height="18" rx="4" fill="#fff1f0" stroke="#ffa39e" stroke-width="0.5"/>
+    <text x="576" y="423" text-anchor="middle" font-size="9" fill="#ff4d4f">驳回</text>
+
+    <!-- RD: 业务内测 → ①或③ (下方通道, y=730) -->
+    <path d="M885,559 L885,730 L390,730 L390,559" stroke="#ff4d4f" stroke-width="1.5" stroke-dasharray="5,4" fill="none" marker-end="url(#ar)"/>
+    <rect x="580" y="735" width="80" height="18" rx="4" fill="#fff1f0" stroke="#ffa39e" stroke-width="0.5"/>
+    <text x="620" y="748" text-anchor="middle" font-size="9" fill="#ff4d4f">驳回到①或③</text>
+
+  </svg>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color l-r01"></div>R01 应用创建人</div>
+    <div class="legend-item"><div class="legend-color l-r02"></div>R02 通道运营人员</div>
+    <div class="legend-item"><div class="legend-color l-r03"></div>R03 业务负责人</div>
+    <div class="legend-item"><div class="legend-color l-shared"></div>R01+R02 共同参与</div>
+    <div class="legend-item"><div class="legend-color l-forward"></div>正向流转</div>
+    <div class="legend-item"><div class="legend-color l-reject"></div>驳回路径</div>
+  </div>
+</div>
+
+</body>
+</html>

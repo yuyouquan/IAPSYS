@@ -61,30 +61,27 @@ export const flowHandlers = [
   }),
 
   http.post('/api/v1/flows', async ({ request }) => {
-    const body = await request.json() as { type: string; suffix?: string };
+    const body = await request.json() as { type: string; year: number; month: number; suffix?: string };
     const now = new Date();
-    const month = now.getMonth() + 1;
-
-    if (body.type === 'monthly') {
-      const exists = mockFlows.some(f => f.shuttleType === 'monthly' && f.name.startsWith(`${month}月班车`));
-      if (exists) {
-        return HttpResponse.json({ code: 1001, message: '本月班车已创建', data: null });
-      }
-    }
+    const year = body.year || now.getFullYear();
+    const month = body.month || (now.getMonth() + 1);
 
     let name: string;
     if (body.type === 'monthly') {
-      name = `${month}月班车`;
-    } else {
-      // 临时班车使用用户自定义后缀
-      const suffix = body.suffix || '';
-      name = `${month}月临时班车-${suffix}`;
-
-      // 检查名称唯一性
-      const duplicate = mockFlows.some(f => f.name === name);
-      if (duplicate) {
-        return HttpResponse.json({ code: 1002, message: `班车名称「${name}」已存在，请更换名称`, data: null });
+      name = `${year}-${month}月班车`;
+      const exists = mockFlows.some(f => f.name === name);
+      if (exists) {
+        return HttpResponse.json({ code: 1001, message: `${year}年${month}月班车已创建`, data: null });
       }
+    } else {
+      const suffix = body.suffix || '';
+      name = `${year}-${month}月临时班车-${suffix}`;
+    }
+
+    // 检查名称唯一性
+    const duplicate = mockFlows.some(f => f.name === name);
+    if (duplicate) {
+      return HttpResponse.json({ code: 1002, message: `班车名称「${name}」已存在，请更换名称`, data: null });
     }
 
     const newFlow: FlowRecord = {

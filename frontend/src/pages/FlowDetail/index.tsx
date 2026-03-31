@@ -243,39 +243,35 @@ const FlowDetail: React.FC = () => {
           value={addSearchKeyword}
           onChange={(e) => setAddSearchKeyword(e.target.value)}
         />
-        <div style={{ maxHeight: 420, overflowY: 'auto' }}>
+        <div style={{ maxHeight: 420, overflowY: 'auto', border: '1px solid #F0F0F0', borderRadius: 6 }}>
           <Checkbox.Group
             value={selectedAppIds}
             onChange={(vals) => setSelectedAppIds(vals as string[])}
-            style={{ width: '100%' }}
+            style={{ display: 'block', width: '100%' }}
           >
             {availableApps.filter(a =>
                 !addSearchKeyword || a.appName.includes(addSearchKeyword) || a.packageName.includes(addSearchKeyword)
-              ).map((app) => (
-                <div
+              ).map((app, idx, arr) => (
+                <label
                   key={app.id}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '10px 12px',
-                    borderBottom: '1px solid #F5F5F5',
-                    transition: 'background 0.15s',
-                    borderRadius: 4,
+                    padding: '10px 16px',
+                    borderBottom: idx < arr.length - 1 ? '1px solid #F0F0F0' : 'none',
                     cursor: 'pointer',
+                    transition: 'background 0.15s',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = '#FAFAFA'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#F5F7FA'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                 >
                   <Checkbox value={app.id} style={{ marginRight: 12 }} />
-                  <div style={{ width: 36, height: 36, borderRadius: 8, background: '#F5F7FA', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, marginRight: 12 }}>
-                    {app.appIcon ? <img src={app.appIcon} alt="" style={{ width: 36, height: 36, borderRadius: 8 }} /> : <AppstoreOutlined style={{ color: '#8C8C8C' }} />}
+                  <div style={{ width: 32, height: 32, borderRadius: 6, background: '#F0F2F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginRight: 12 }}>
+                    {app.appIcon ? <img src={app.appIcon} alt="" style={{ width: 32, height: 32, borderRadius: 6 }} /> : <AppstoreOutlined style={{ color: '#8C8C8C', fontSize: 16 }} />}
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 500, fontSize: 14, color: '#262626', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{app.appName}</div>
-                    <div style={{ fontSize: 12, color: '#8C8C8C', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{app.packageName}</div>
-                  </div>
-                  <Tag style={{ marginLeft: 12, flexShrink: 0, borderRadius: 4 }}>{app.appType}</Tag>
-                </div>
+                  <span style={{ fontWeight: 500, fontSize: 14, color: '#262626', flexShrink: 0, marginRight: 16 }}>{app.appName}</span>
+                  <span style={{ fontSize: 12, color: '#8C8C8C', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{app.packageName}</span>
+                </label>
               ))}
           </Checkbox.Group>
         </div>

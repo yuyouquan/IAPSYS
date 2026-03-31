@@ -11,7 +11,7 @@ interface FlowState {
   detailLoading: boolean;
   fetchFlowList: (params?: Partial<FlowListParams>) => Promise<void>;
   fetchFlowDetail: (flowId: string) => Promise<void>;
-  createShuttle: (type: 'monthly' | 'temporary', suffix?: string) => Promise<FlowRecord>;
+  createShuttle: (type: 'monthly' | 'temporary', year: number, month: number, suffix?: string) => Promise<FlowRecord>;
   deleteShuttle: (flowId: string) => Promise<void>;
   updateFlowParams: (params: Partial<FlowListParams>) => void;
 }
@@ -44,8 +44,8 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
       set({ detailLoading: false });
     }
   },
-  createShuttle: async (type, suffix) => {
-    const result = await flowService.createShuttle(type, suffix);
+  createShuttle: async (type, year, month, suffix) => {
+    const result = await flowService.createShuttle(type, year, month, suffix);
     await get().fetchFlowList({ page: 1 });
     return result;
   },
