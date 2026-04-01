@@ -33,10 +33,13 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({ value, onChange, options, p
         alignItems: 'flex-start',
         gap: 12,
         padding: '8px 12px',
-        background: '#FAFBFC',
-        borderRadius: 8,
-        border: '1px solid #F0F0F0',
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.50) 0%, rgba(241,245,249,0.40) 100%)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        borderRadius: 10,
+        border: '1px solid rgba(148, 163, 184, 0.15)',
         minHeight: 40,
+        transition: 'all 0.2s ease',
       }}
     >
       <Radio.Group
@@ -69,12 +72,13 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({ value, onChange, options, p
               onClose={onClose}
               style={{
                 margin: '2px 4px 2px 0',
-                borderRadius: 4,
-                background: '#E6F4FF',
-                border: '1px solid #91CAFF',
-                color: '#1677FF',
+                borderRadius: 6,
+                background: 'rgba(37, 99, 235, 0.08)',
+                border: '1px solid rgba(37, 99, 235, 0.20)',
+                color: '#2563EB',
                 fontSize: 12,
                 lineHeight: '20px',
+                fontWeight: 500,
               }}
             >
               {label}
@@ -84,7 +88,7 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({ value, onChange, options, p
       )}
 
       {type === 'all' && (
-        <span style={{ color: '#8C8C8C', fontSize: 13, lineHeight: '28px' }}>
+        <span style={{ color: '#6B7280', fontSize: 13, lineHeight: '28px' }}>
           不限制，适用于所有
         </span>
       )}

@@ -108,7 +108,7 @@ const FlowDetail: React.FC = () => {
           </Descriptions.Item>
           <Descriptions.Item label="有效期">
             {currentFlow ? (
-              <span style={{ color: isExpired ? '#FF4D4F' : undefined }}>
+              <span style={{ color: isExpired ? '#EF4444' : undefined }}>
                 {dayjs(currentFlow.expiresAt).format('YYYY-MM-DD')}
                 {isExpired && <Tag color="error" style={{ marginLeft: 8 }}>已过期</Tag>}
               </span>
@@ -156,27 +156,27 @@ const FlowDetail: React.FC = () => {
                       styles={{ body: { padding: 16, height: '100%', display: 'flex', flexDirection: 'column' as const } }}
                       style={{
                         height: '100%',
-                        borderRadius: 8,
-                        border: '1px solid #F0F0F0',
+                        borderRadius: 12,
+                        border: '1px solid rgba(255, 255, 255, 0.35)',
                         borderLeft: `3px solid ${statusColor}`,
                         overflow: 'hidden',
                       }}
                     >
                       {/* Header: icon + name */}
                       <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
-                        <div style={{ width: 44, height: 44, borderRadius: 10, background: '#F5F7FA', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
-                          {app.appIcon ? <img src={app.appIcon} alt="" style={{ width: 44, height: 44, borderRadius: 10 }} /> : <AppstoreOutlined style={{ color: '#8C8C8C' }} />}
+                        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'rgba(37, 99, 235, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
+                          {app.appIcon ? <img src={app.appIcon} alt="" style={{ width: 44, height: 44, borderRadius: 10 }} /> : <AppstoreOutlined style={{ color: '#2563EB' }} />}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#262626' }}>{app.appName}</div>
-                          <div style={{ fontSize: 12, color: '#8C8C8C', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{app.packageName}</div>
+                          <div style={{ fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#0F172A' }}>{app.appName}</div>
+                          <div style={{ fontSize: 12, color: '#6B7280', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{app.packageName}</div>
                         </div>
                       </div>
 
                       {/* Meta info */}
                       <div style={{ fontSize: 12, color: '#595959', marginBottom: 10, lineHeight: '20px' }}>
                         <span>{app.appType}</span>
-                        <span style={{ margin: '0 6px', color: '#D9D9D9' }}>|</span>
+                        <span style={{ margin: '0 6px', color: 'rgba(148, 163, 184, 0.25)' }}>|</span>
                         <span>{app.versionCode || '未指定'}</span>
                       </div>
 
@@ -200,10 +200,10 @@ const FlowDetail: React.FC = () => {
                             title={app.rejectReason}
                             style={{
                               padding: '4px 8px',
-                              background: '#FFF2F0',
-                              borderRadius: 4,
+                              background: 'rgba(239, 68, 68, 0.08)',
+                              borderRadius: 6,
                               fontSize: 12,
-                              color: '#FF4D4F',
+                              color: '#EF4444',
                               lineHeight: '18px',
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
@@ -255,7 +255,7 @@ const FlowDetail: React.FC = () => {
           value={addSearchKeyword}
           onChange={(e) => setAddSearchKeyword(e.target.value)}
         />
-        <div style={{ maxHeight: 420, overflowY: 'auto', border: '1px solid #F0F0F0', borderRadius: 6 }}>
+        <div style={{ maxHeight: 420, overflowY: 'auto', border: '1px solid rgba(148, 163, 184, 0.12)', borderRadius: 10 }}>
           <Checkbox.Group
             value={selectedAppIds}
             onChange={(vals) => setSelectedAppIds(vals as string[])}
@@ -270,19 +270,19 @@ const FlowDetail: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     padding: '10px 16px',
-                    borderBottom: idx < arr.length - 1 ? '1px solid #F0F0F0' : 'none',
+                    borderBottom: idx < arr.length - 1 ? '1px solid rgba(148, 163, 184, 0.08)' : 'none',
                     cursor: 'pointer',
                     transition: 'background 0.15s',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = '#F5F7FA'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(37, 99, 235, 0.03)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                 >
                   <Checkbox value={app.id} style={{ marginRight: 12 }} />
-                  <div style={{ width: 32, height: 32, borderRadius: 6, background: '#F0F2F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginRight: 12 }}>
-                    {app.appIcon ? <img src={app.appIcon} alt="" style={{ width: 32, height: 32, borderRadius: 6 }} /> : <AppstoreOutlined style={{ color: '#8C8C8C', fontSize: 16 }} />}
+                  <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(37, 99, 235, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginRight: 12 }}>
+                    {app.appIcon ? <img src={app.appIcon} alt="" style={{ width: 32, height: 32, borderRadius: 8 }} /> : <AppstoreOutlined style={{ color: '#2563EB', fontSize: 16 }} />}
                   </div>
-                  <span style={{ fontWeight: 500, fontSize: 14, color: '#262626', flexShrink: 0, marginRight: 16 }}>{app.appName}</span>
-                  <span style={{ fontSize: 12, color: '#8C8C8C', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{app.packageName}</span>
+                  <span style={{ fontWeight: 500, fontSize: 14, color: '#0F172A', flexShrink: 0, marginRight: 16 }}>{app.appName}</span>
+                  <span style={{ fontSize: 12, color: '#6B7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{app.packageName}</span>
                 </label>
               ))}
           </Checkbox.Group>

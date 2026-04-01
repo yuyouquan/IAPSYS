@@ -18,42 +18,47 @@ interface ProcessStepsProps {
 const STATUS_THEME: Record<NodeStatus, {
   color: string;
   bg: string;
+  glassBg: string;
   border: string;
   icon: React.ReactNode;
   label: string;
   lineColor: string;
 }> = {
   completed: {
-    color: '#52C41A',
-    bg: '#F6FFED',
-    border: '#B7EB8F',
-    icon: <CheckCircleFilled style={{ fontSize: 18, color: '#52C41A' }} />,
+    color: '#10B981',
+    bg: 'rgba(16, 185, 129, 0.07)',
+    glassBg: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(255,255,255,0.60) 100%)',
+    border: 'rgba(16, 185, 129, 0.22)',
+    icon: <CheckCircleFilled style={{ fontSize: 18, color: '#10B981' }} />,
     label: '已完成',
-    lineColor: '#52C41A',
+    lineColor: '#10B981',
   },
   processing: {
-    color: '#1890FF',
-    bg: '#E6F7FF',
-    border: '#91D5FF',
-    icon: <SyncOutlined spin style={{ fontSize: 18, color: '#1890FF' }} />,
+    color: '#2563EB',
+    bg: 'rgba(37, 99, 235, 0.07)',
+    glassBg: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0.60) 100%)',
+    border: 'rgba(37, 99, 235, 0.25)',
+    icon: <SyncOutlined spin style={{ fontSize: 18, color: '#2563EB' }} />,
     label: '进行中',
-    lineColor: '#1890FF',
+    lineColor: '#2563EB',
   },
   rejected: {
-    color: '#FF4D4F',
-    bg: '#FFF2F0',
-    border: '#FFA39E',
-    icon: <CloseCircleFilled style={{ fontSize: 18, color: '#FF4D4F' }} />,
+    color: '#EF4444',
+    bg: 'rgba(239, 68, 68, 0.07)',
+    glassBg: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(255,255,255,0.60) 100%)',
+    border: 'rgba(239, 68, 68, 0.22)',
+    icon: <CloseCircleFilled style={{ fontSize: 18, color: '#EF4444' }} />,
     label: '已驳回',
-    lineColor: '#FF4D4F',
+    lineColor: '#EF4444',
   },
   pending: {
-    color: '#BFBFBF',
-    bg: '#FAFAFA',
-    border: '#E8E8E8',
-    icon: <ClockCircleOutlined style={{ fontSize: 18, color: '#BFBFBF' }} />,
+    color: '#94A3B8',
+    bg: 'rgba(148, 163, 184, 0.05)',
+    glassBg: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(248,250,252,0.40) 100%)',
+    border: 'rgba(148, 163, 184, 0.15)',
+    icon: <ClockCircleOutlined style={{ fontSize: 18, color: '#94A3B8' }} />,
     label: '未开始',
-    lineColor: '#E8E8E8',
+    lineColor: 'rgba(148, 163, 184, 0.20)',
   },
 };
 
@@ -70,7 +75,6 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
 
         return (
           <React.Fragment key={node.nodeId}>
-            {/* Node card */}
             <div
               onClick={clickable ? () => onNodeClick(node.nodeType) : undefined}
               style={{
@@ -78,35 +82,36 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
                 minWidth: 120,
                 maxWidth: 180,
                 padding: '12px 14px',
-                borderRadius: 8,
+                borderRadius: 10,
                 border: `1.5px solid ${isActive ? theme.color : theme.border}`,
-                background: isActive ? theme.bg : '#fff',
+                background: theme.glassBg,
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 cursor: clickable ? 'pointer' : 'default',
                 opacity: isPending ? 0.6 : 1,
                 transition: 'all 0.2s ease',
                 position: 'relative',
                 boxShadow: isActive
-                  ? `0 2px 8px ${theme.color}25`
+                  ? `0 4px 16px ${theme.color}18`
                   : clickable
-                    ? '0 1px 3px rgba(0,0,0,0.06)'
+                    ? '0 1px 6px rgba(15, 23, 42, 0.04)'
                     : 'none',
               }}
               onMouseEnter={(e) => {
                 if (clickable && !isActive) {
                   e.currentTarget.style.borderColor = theme.color;
-                  e.currentTarget.style.background = theme.bg;
-                  e.currentTarget.style.boxShadow = `0 2px 8px ${theme.color}20`;
+                  e.currentTarget.style.boxShadow = `0 4px 16px ${theme.color}15`;
+                  e.currentTarget.style.transform = 'translateY(-1px)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (clickable && !isActive) {
-                  e.currentTarget.style.borderColor = theme.border;
-                  e.currentTarget.style.background = '#fff';
-                  e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+                  e.currentTarget.style.borderColor = String(theme.border);
+                  e.currentTarget.style.boxShadow = '0 1px 6px rgba(15, 23, 42, 0.04)';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
             >
-              {/* Header: icon + status label */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                 {theme.icon}
                 <span
@@ -114,8 +119,8 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
                     fontSize: 11,
                     color: theme.color,
                     background: theme.bg,
-                    padding: '1px 6px',
-                    borderRadius: 4,
+                    padding: '2px 7px',
+                    borderRadius: 5,
                     fontWeight: 500,
                     lineHeight: '18px',
                   }}
@@ -124,12 +129,11 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
                 </span>
               </div>
 
-              {/* Node name */}
               <div
                 style={{
                   fontSize: 13,
                   fontWeight: 600,
-                  color: isPending ? '#BFBFBF' : '#262626',
+                  color: isPending ? '#94A3B8' : '#0F172A',
                   marginBottom: 6,
                   lineHeight: '20px',
                   whiteSpace: 'nowrap',
@@ -140,50 +144,31 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
                 {NODE_CONFIG[node.nodeType]?.name || node.nodeName}
               </div>
 
-              {/* Owner */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <UserOutlined style={{ fontSize: 11, color: isPending ? '#D9D9D9' : '#8C8C8C' }} />
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: isPending ? '#D9D9D9' : '#8C8C8C',
-                    lineHeight: '16px',
-                  }}
-                >
+                <UserOutlined style={{ fontSize: 11, color: isPending ? '#CBD5E1' : '#64748B' }} />
+                <span style={{ fontSize: 12, color: isPending ? '#CBD5E1' : '#64748B', lineHeight: '16px' }}>
                   {node.ownerName}
                 </span>
               </div>
             </div>
 
-            {/* Connecting arrow */}
             {idx < sortedNodes.length - 1 && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: 32,
-                  minWidth: 32,
-                  justifyContent: 'center',
-                  position: 'relative',
-                }}
-              >
-                {/* Line */}
+              <div style={{ display: 'flex', alignItems: 'center', width: 32, minWidth: 32, justifyContent: 'center' }}>
                 <div
                   style={{
                     height: 2,
                     flex: 1,
-                    background: node.nodeStatus === 'completed' ? '#52C41A' : '#E8E8E8',
+                    background: node.nodeStatus === 'completed' ? '#10B981' : 'rgba(148, 163, 184, 0.20)',
                     borderRadius: 1,
                   }}
                 />
-                {/* Arrow head */}
                 <div
                   style={{
                     width: 0,
                     height: 0,
                     borderTop: '5px solid transparent',
                     borderBottom: '5px solid transparent',
-                    borderLeft: `6px solid ${node.nodeStatus === 'completed' ? '#52C41A' : '#E8E8E8'}`,
+                    borderLeft: `6px solid ${node.nodeStatus === 'completed' ? '#10B981' : 'rgba(148, 163, 184, 0.20)'}`,
                     flexShrink: 0,
                   }}
                 />

@@ -170,7 +170,7 @@ const Workbench: React.FC = () => {
       render: (text) => {
         const expired = dayjs(text).isBefore(dayjs(), 'day');
         return (
-          <span style={{ color: expired ? '#FF4D4F' : undefined }}>
+          <span style={{ color: expired ? '#EF4444' : undefined }}>
             {dayjs(text).format('YYYY-MM-DD')}
             {expired && <span style={{ fontSize: 12, marginLeft: 4 }}>(已过期)</span>}
           </span>
@@ -221,8 +221,8 @@ const Workbench: React.FC = () => {
     .map((m) => ({ label: `${m}月`, value: m }));
 
   return (
-    <Layout style={{ background: '#fff', borderRadius: 8, minHeight: 'calc(100vh - 104px)' }}>
-      <Content style={{ padding: 24 }}>
+    <Layout style={{ background: 'transparent', borderRadius: 16, minHeight: 'calc(100vh - 104px)' }}>
+      <Content style={{ padding: 24 }} className="glass-card-static">
         {/* 工具栏 */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
           <Space wrap size={12}>
@@ -418,7 +418,12 @@ const Workbench: React.FC = () => {
         reverseArrow
         theme="light"
         trigger={null}
-        style={{ borderLeft: '1px solid #F0F0F0', background: '#FAFAFA' }}
+        style={{
+          borderLeft: '1px solid rgba(148, 163, 184, 0.12)',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.50) 0%, rgba(241,245,249,0.40) 100%)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+        }}
       >
         {todoCollapsed ? (
           /* 收起状态：竖排标题 + 数量 */
@@ -434,13 +439,13 @@ const Workbench: React.FC = () => {
               userSelect: 'none',
             }}
           >
-            <Badge count={todoTotal} style={{ backgroundColor: '#1890FF' }} />
+            <Badge count={todoTotal} style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }} />
             <div
               style={{
                 writingMode: 'vertical-rl',
                 fontSize: 14,
                 fontWeight: 500,
-                color: '#333',
+                color: '#1E293B',
                 marginTop: 12,
                 letterSpacing: 4,
               }}
@@ -453,7 +458,7 @@ const Workbench: React.FC = () => {
             <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>待办事项</span>
               <Space size={8}>
-                <Badge count={todoTotal} style={{ backgroundColor: '#1890FF' }} />
+                <Badge count={todoTotal} style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }} />
                 <span
                   onClick={() => setTodoCollapsed(true)}
                   style={{ cursor: 'pointer', fontSize: 12, color: '#999' }}

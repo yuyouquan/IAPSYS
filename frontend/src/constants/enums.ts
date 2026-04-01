@@ -175,15 +175,15 @@ export const NODE_CONFIG: Record<NodeType, {
 };
 
 export const NODE_STATUS_COLOR = {
-  pending: '#D9D9D9',
-  processing: '#1890FF',
-  completed: '#52C41A',
-  rejected: '#FF4D4F',
+  pending: '#94A3B8',
+  processing: '#2563EB',
+  completed: '#10B981',
+  rejected: '#EF4444',
 } as const;
 
 export const STATUS_TAG_CONFIG = {
-  total:      { text: '#000000', bg: 'transparent', label: '总数' },
-  success:    { text: '#52C41A', bg: '#F6FFED', label: '成功' },
-  processing: { text: '#1890FF', bg: '#E6F7FF', label: '进行中' },
-  rejected:   { text: '#FF4D4F', bg: '#FFF2F0', label: '拒绝' },
+  total:      { text: '#334155', bg: 'rgba(51, 65, 85, 0.06)', label: '总数' },
+  success:    { text: '#059669', bg: 'rgba(16, 185, 129, 0.08)', label: '成功' },
+  processing: { text: '#2563EB', bg: 'rgba(37, 99, 235, 0.08)', label: '进行中' },
+  rejected:   { text: '#DC2626', bg: 'rgba(239, 68, 68, 0.08)', label: '拒绝' },
 } as const;

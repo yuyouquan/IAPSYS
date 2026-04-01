@@ -20,7 +20,17 @@ const ReviewPanel: React.FC<ReviewPanelProps> = ({ reviews = [], onSubmit, loadi
   };
 
   return (
-    <div>
+    <div
+      style={{
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(241,245,249,0.40) 100%)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        borderRadius: 14,
+        border: '1px solid rgba(255, 255, 255, 0.30)',
+        boxShadow: '0 4px 20px rgba(15, 23, 42, 0.05)',
+        padding: 16,
+      }}
+    >
       {reviews.length > 0 && (
         <>
           <Divider>审核记录</Divider>
@@ -38,7 +48,7 @@ const ReviewPanel: React.FC<ReviewPanelProps> = ({ reviews = [], onSubmit, loadi
                       ) : (
                         <Tag color="error" icon={<CloseCircleOutlined />}>拒绝</Tag>
                       )}
-                      <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>
+                      <span style={{ fontSize: 12, color: '#6B7280' }}>
                         {item.reviewTime ? dayjs(item.reviewTime).format('YYYY-MM-DD HH:mm:ss') : '-'}
                       </span>
                     </Space>

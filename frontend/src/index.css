@@ -1,3 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* === Tech Glassmorphism Design System === */
+:root {
+  --glass-blur: 18px;
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+
+  --color-primary: #2563EB;
+  --color-primary-light: #60A5FA;
+  --color-primary-dark: #1D4ED8;
+  --color-accent: #06B6D4;
+  --color-bg: #F0F4F8;
+  --color-text: #0F172A;
+  --color-text-secondary: #64748B;
+
+  --gradient-bg: linear-gradient(145deg, #E2E8F0 0%, #EFF6FF 35%, #F0F4F8 65%, #E0F2FE 100%);
+  --gradient-header: linear-gradient(135deg, rgba(255,255,255,0.78) 0%, rgba(241,245,249,0.70) 100%);
+  --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.72) 0%, rgba(248,250,252,0.55) 100%);
+
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,13 +37,254 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text);
+  background: var(--gradient-bg);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 #root {
   min-height: 100vh;
+}
+
+/* === Glass Utility Classes === */
+.glass-header {
+  background: var(--gradient-header);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 1px 12px rgba(15, 23, 42, 0.06);
+}
+
+.glass-card-static {
+  background: var(--gradient-card);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow);
+}
+
+/* === Ant Design Global Overrides === */
+
+.ant-card {
+  background: var(--gradient-card) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.ant-card:hover {
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.09) !important;
+}
+
+/* Modals */
+.ant-modal .ant-modal-content {
+  background: linear-gradient(135deg, rgba(255,255,255,0.88) 0%, rgba(241,245,249,0.82) 100%) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.14) !important;
+}
+
+.ant-modal .ant-modal-header {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12) !important;
+}
+
+.ant-modal .ant-modal-footer {
+  border-top: 1px solid rgba(148, 163, 184, 0.12) !important;
+}
+
+/* Table */
+.ant-table {
+  background: transparent !important;
+}
+
+.ant-table-wrapper .ant-table-thead > tr > th,
+.ant-table-wrapper .ant-table-thead > tr > td {
+  background: rgba(37, 99, 235, 0.03) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12) !important;
+  font-weight: 600 !important;
+  color: #1E293B !important;
+}
+
+.ant-table-wrapper .ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08) !important;
+}
+
+.ant-table-wrapper .ant-table-tbody > tr:hover > td {
+  background: rgba(37, 99, 235, 0.02) !important;
+}
+
+/* Buttons */
+.ant-btn-primary {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 500 !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.ant-btn-primary:hover {
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+  transform: translateY(-0.5px);
+}
+
+.ant-btn-default {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  border-radius: var(--radius-sm) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.ant-btn-default:hover {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+/* Select */
+.ant-select .ant-select-selector {
+  background: rgba(255, 255, 255, 0.60) !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.10) !important;
+}
+
+.ant-select-dropdown {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* Input */
+.ant-input,
+.ant-input-affix-wrapper {
+  background: rgba(255, 255, 255, 0.60) !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.ant-input:focus,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.10) !important;
+}
+
+/* Tabs */
+.ant-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+}
+
+.ant-tabs .ant-tabs-ink-bar {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%) !important;
+  height: 2.5px !important;
+  border-radius: 2px !important;
+}
+
+/* Badge */
+.ant-badge .ant-badge-count {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.30) !important;
+}
+
+/* Menu */
+.ant-menu-horizontal {
+  border-bottom: none !important;
+  background: transparent !important;
+}
+
+.ant-menu-horizontal .ant-menu-item-selected {
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+}
+
+.ant-menu-horizontal .ant-menu-item-selected::after {
+  border-bottom-color: var(--color-primary) !important;
+}
+
+/* Tag */
+.ant-tag {
+  border-radius: 6px !important;
+}
+
+/* Pagination */
+.ant-pagination .ant-pagination-item-active {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+  border-color: #2563EB !important;
+}
+
+.ant-pagination .ant-pagination-item-active a {
+  color: #fff !important;
+}
+
+/* Radio Button */
+.ant-radio-button-wrapper-checked {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+  border-color: #2563EB !important;
+  color: #fff !important;
+}
+
+/* Descriptions */
+.ant-descriptions {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* Alert */
+.ant-alert {
+  border-radius: var(--radius-sm) !important;
+}
+
+/* Divider */
+.ant-divider {
+  border-color: rgba(148, 163, 184, 0.15) !important;
+}
+
+/* Spin */
+.ant-spin .ant-spin-dot-item {
+  background-color: var(--color-primary) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.20);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

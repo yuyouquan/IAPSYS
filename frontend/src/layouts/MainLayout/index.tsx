@@ -9,17 +9,17 @@ import { mockUsers } from '../../mocks/data/users';
 const { Header, Content } = Layout;
 
 const ROLE_COLOR: Record<string, string> = {
-  R01: '#52C41A',
-  R02: '#1890FF',
-  R03: '#FA8C16',
-  R08: '#722ED1',
+  R01: '#10B981',
+  R02: '#2563EB',
+  R03: '#F59E0B',
+  R08: '#8B5CF6',
 };
 
-const AVATAR_COLOR: Record<string, string> = {
-  R01: '#52C41A',
-  R02: '#1890FF',
-  R03: '#FA8C16',
-  R08: '#722ED1',
+const AVATAR_BG: Record<string, string> = {
+  R01: '#10B981',
+  R02: '#2563EB',
+  R03: '#F59E0B',
+  R08: '#8B5CF6',
 };
 
 const MainLayout: React.FC = () => {
@@ -41,28 +41,28 @@ const MainLayout: React.FC = () => {
 
   const userOptions = [
     {
-      label: <span style={{ color: '#52C41A', fontWeight: 500 }}>应用创建申请人 (R01)</span>,
+      label: <span style={{ color: '#10B981', fontWeight: 500 }}>应用创建申请人 (R01)</span>,
       title: 'R01',
       options: mockUsers
         .filter((u) => u.role === 'R01')
         .map((u) => ({ label: u.name, value: u.userId })),
     },
     {
-      label: <span style={{ color: '#1890FF', fontWeight: 500 }}>通道运营人员 (R02)</span>,
+      label: <span style={{ color: '#2563EB', fontWeight: 500 }}>通道运营人员 (R02)</span>,
       title: 'R02',
       options: mockUsers
         .filter((u) => u.role === 'R02')
         .map((u) => ({ label: u.name, value: u.userId })),
     },
     {
-      label: <span style={{ color: '#FA8C16', fontWeight: 500 }}>业务负责人 (R03)</span>,
+      label: <span style={{ color: '#F59E0B', fontWeight: 500 }}>业务负责人 (R03)</span>,
       title: 'R03',
       options: mockUsers
         .filter((u) => u.role === 'R03')
         .map((u) => ({ label: u.name, value: u.userId })),
     },
     {
-      label: <span style={{ color: '#722ED1', fontWeight: 500 }}>管理员 (R08)</span>,
+      label: <span style={{ color: '#8B5CF6', fontWeight: 500 }}>管理员 (R08)</span>,
       title: 'R08',
       options: mockUsers
         .filter((u) => u.role === 'R08')
@@ -76,55 +76,80 @@ const MainLayout: React.FC = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', background: 'transparent' }}>
       <Header
+        className="glass-header"
         style={{
-          background: '#fff',
-          borderBottom: '1px solid #F0F0F0',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 24px',
-          height: 56,
+          padding: '0 28px',
+          height: 60,
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontSize: 18, fontWeight: 600, marginRight: 48, color: '#1890FF' }}>
-            独立应用发布系统
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', marginRight: 40, gap: 10 }}>
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 8,
+                background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+              }}
+            >
+              <span style={{ color: '#fff', fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
+                IA
+              </span>
+            </div>
+            <span
+              style={{
+                fontSize: 16,
+                fontWeight: 600,
+                color: '#0F172A',
+                letterSpacing: '-0.2px',
+              }}
+            >
+              独立应用发布系统
+            </span>
+          </div>
           <Menu
             mode="horizontal"
             selectedKeys={[currentPath]}
             items={navItems}
             onClick={({ key }) => navigate(key)}
-            style={{ borderBottom: 'none' }}
+            style={{ borderBottom: 'none', background: 'transparent' }}
           />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          {/* 角色切换 */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <Select
             value={currentUser.userId}
             onChange={handleSwitchUser}
             options={userOptions}
             style={{ width: 200 }}
-            suffixIcon={<SwapOutlined />}
+            suffixIcon={<SwapOutlined style={{ color: '#64748B' }} />}
             optionRender={(option) => {
               const user = mockUsers.find((u) => u.userId === option.value);
               if (!user) return option.label;
               return (
                 <Space>
-                  <Avatar size={20} style={{ backgroundColor: AVATAR_COLOR[user.role], fontSize: 12 }}>
+                  <Avatar
+                    size={20}
+                    style={{ backgroundColor: AVATAR_BG[user.role], fontSize: 11, fontWeight: 600 }}
+                  >
                     {user.name[0]}
                   </Avatar>
                   <span>{user.name}</span>
                   <Tag
                     color={ROLE_COLOR[user.role]}
-                    style={{ marginInlineEnd: 0, fontSize: 11, lineHeight: '18px', padding: '0 4px' }}
+                    style={{ marginInlineEnd: 0, fontSize: 11, lineHeight: '18px', padding: '0 5px' }}
                   >
                     {user.role}
                   </Tag>
@@ -134,14 +159,21 @@ const MainLayout: React.FC = () => {
           />
 
           <Badge count={5} size="small">
-            <BellOutlined style={{ fontSize: 18, cursor: 'pointer' }} />
+            <BellOutlined style={{ fontSize: 18, cursor: 'pointer', color: '#334155' }} />
           </Badge>
           <Dropdown menu={{ items: userMenuItems }}>
             <Space style={{ cursor: 'pointer' }}>
-              <Avatar size={28} style={{ backgroundColor: AVATAR_COLOR[currentUser.role] }}>
+              <Avatar
+                size={28}
+                style={{
+                  backgroundColor: AVATAR_BG[currentUser.role],
+                  fontWeight: 600,
+                  fontSize: 12,
+                }}
+              >
                 {currentUser.name[0]}
               </Avatar>
-              <span>{currentUser.name}</span>
+              <span style={{ fontWeight: 500, color: '#1E293B' }}>{currentUser.name}</span>
               <Tag
                 color={ROLE_COLOR[currentUser.role]}
                 style={{ marginInlineEnd: 0, fontSize: 11, lineHeight: '20px' }}
@@ -155,12 +187,17 @@ const MainLayout: React.FC = () => {
 
       <Content
         style={{
-          padding: 24,
-          background: '#F0F2F5',
-          minHeight: 'calc(100vh - 56px)',
+          padding: '20px 28px',
+          minHeight: 'calc(100vh - 60px)',
         }}
       >
-        <Suspense fallback={<div style={{ textAlign: 'center', paddingTop: 100 }}><Spin size="large" /></div>}>
+        <Suspense
+          fallback={
+            <div style={{ textAlign: 'center', paddingTop: 100 }}>
+              <Spin size="large" />
+            </div>
+          }
+        >
           <Outlet />
         </Suspense>
       </Content>

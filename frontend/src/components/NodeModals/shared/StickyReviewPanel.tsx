@@ -63,7 +63,12 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
   return (
     <div
       style={{
-        background: '#fff',
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.60) 0%, rgba(241,245,249,0.45) 100%)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderRadius: 14,
+        border: '1px solid rgba(255, 255, 255, 0.35)',
+        boxShadow: '0 8px 32px rgba(15, 23, 42, 0.06)',
         marginBottom: 16,
         padding: 16,
       }}
@@ -82,9 +87,10 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
                     style={{
                       padding: '8px 12px',
                       marginBottom: 8,
-                      background: status === 'approved' ? '#f6ffed' : status === 'rejected' ? '#fff2f0' : '#fafafa',
-                      borderRadius: 6,
-                      border: `1px solid ${status === 'approved' ? '#b7eb8f' : status === 'rejected' ? '#ffccc7' : '#f0f0f0'}`,
+                      background: status === 'approved' ? 'rgba(16, 185, 129, 0.08)' : status === 'rejected' ? 'rgba(239, 68, 68, 0.08)' : 'rgba(156, 163, 175, 0.06)',
+                      borderRadius: 8,
+                      border: `1px solid ${status === 'approved' ? 'rgba(16, 185, 129, 0.25)' : status === 'rejected' ? 'rgba(239, 68, 68, 0.25)' : 'rgba(148, 163, 184, 0.10)'}`,
+                      backdropFilter: 'blur(8px)',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
