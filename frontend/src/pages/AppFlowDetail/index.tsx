@@ -102,26 +102,48 @@ const AppFlowDetail: React.FC = () => {
   return (
     <div>
       {/* 面包屑 */}
-      <Breadcrumb
-        style={{ marginBottom: 16 }}
-        items={[
-          { title: <span style={{ cursor: 'pointer' }} onClick={() => navigate('/workbench')}><HomeOutlined /> 工作台</span> },
-          { title: <span style={{ cursor: 'pointer' }} onClick={() => navigate(`/workbench/flow/${flowId}`)}>流程单详情</span> },
-          { title: 'APK 发布详情' },
-        ]}
-      />
+      <div style={{
+        display: 'inline-flex',
+        padding: '6px 16px',
+        borderRadius: 20,
+        background: 'rgba(255,255,255,0.5)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255,255,255,0.4)',
+        marginBottom: 16,
+      }}>
+        <Breadcrumb
+          items={[
+            { title: <span style={{ cursor: 'pointer', color: '#2563EB' }} onClick={() => navigate('/workbench')}><HomeOutlined /> 工作台</span> },
+            { title: <span style={{ cursor: 'pointer', color: '#2563EB' }} onClick={() => navigate(`/workbench/flow/${flowId}`)}>流程单详情</span> },
+            { title: 'APK 发布详情' },
+          ]}
+        />
+      </div>
 
       {/* 应用基本信息 */}
       <Card style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 16 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 12, background: '#F0F2F5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32 }}>
-            {currentApp.appIcon ? <img src={currentApp.appIcon} alt="" style={{ width: 64, height: 64, borderRadius: 12 }} /> : <AppstoreOutlined style={{ color: '#8C8C8C' }} />}
+          <div style={{
+            width: 64, height: 64, borderRadius: 12,
+            background: 'radial-gradient(circle, rgba(37,99,235,0.08) 0%, rgba(37,99,235,0.02) 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32,
+            boxShadow: `0 0 0 3px ${statusInfo.color}20`,
+          }}>
+            {currentApp.appIcon ? <img src={currentApp.appIcon} alt="" style={{ width: 64, height: 64, borderRadius: 12 }} /> : <AppstoreOutlined style={{ color: '#2563EB' }} />}
           </div>
           <div>
-            <div style={{ fontSize: 20, fontWeight: 600 }}>{currentApp.appName}</div>
-            <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>{currentApp.packageName}</div>
+            <div style={{ fontSize: 22, fontWeight: 600, letterSpacing: '-0.3px', color: '#0F172A' }}>{currentApp.appName}</div>
+            <div style={{ fontSize: 13, color: '#64748B', fontFamily: 'var(--font-mono)' }}>{currentApp.packageName}</div>
           </div>
-          <Tag color={statusInfo.color} style={{ marginLeft: 'auto', fontSize: 14, padding: '4px 12px' }}>
+          <Tag
+            color={statusInfo.color}
+            style={{
+              marginLeft: 'auto', fontSize: 14, padding: '6px 16px',
+              boxShadow: `0 0 12px ${statusInfo.color}25`,
+              borderRadius: 8,
+            }}
+          >
             {statusInfo.text}
           </Tag>
         </div>
@@ -138,7 +160,7 @@ const AppFlowDetail: React.FC = () => {
       </Card>
 
       {/* 流程节点条 */}
-      <Card title="应用发布流程" style={{ marginBottom: 24 }}>
+      <Card title="应用发布流程" className="section-title-bar" style={{ marginBottom: 24 }}>
         <ProcessSteps
           nodes={currentApp.processNodes}
           activeNode={activeNodeModal || undefined}
@@ -147,7 +169,7 @@ const AppFlowDetail: React.FC = () => {
       </Card>
 
       {/* 历史操作记录 */}
-      <Card title="历史操作记录">
+      <Card title="历史操作记录" className="section-title-bar">
         <Table
           columns={logColumns}
           dataSource={currentApp.operationLogs}
