@@ -5,6 +5,7 @@ import {
   SyncOutlined,
   ClockCircleOutlined,
   UserOutlined,
+  RightOutlined,
 } from '@ant-design/icons';
 import type { ProcessNode, NodeType, NodeStatus } from '../../types/node';
 import { NODE_CONFIG } from '../../constants/enums';
@@ -23,33 +24,41 @@ const STATUS_THEME: Record<NodeStatus, {
   icon: React.ReactNode;
   label: string;
   lineColor: string;
+  badgeBg: string;
+  badgeText: string;
 }> = {
   completed: {
     color: '#10B981',
     bg: 'rgba(16, 185, 129, 0.07)',
-    glassBg: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(255,255,255,0.60) 100%)',
+    glassBg: 'linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(255,255,255,0.60) 100%)',
     border: 'rgba(16, 185, 129, 0.22)',
     icon: <CheckCircleFilled style={{ fontSize: 18, color: '#10B981' }} />,
     label: '已完成',
     lineColor: '#10B981',
+    badgeBg: '#10B981',
+    badgeText: '#fff',
   },
   processing: {
     color: '#2563EB',
     bg: 'rgba(37, 99, 235, 0.07)',
-    glassBg: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0.60) 100%)',
+    glassBg: 'linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(255,255,255,0.60) 100%)',
     border: 'rgba(37, 99, 235, 0.25)',
     icon: <SyncOutlined spin style={{ fontSize: 18, color: '#2563EB' }} />,
     label: '进行中',
     lineColor: '#2563EB',
+    badgeBg: '#2563EB',
+    badgeText: '#fff',
   },
   rejected: {
     color: '#EF4444',
     bg: 'rgba(239, 68, 68, 0.07)',
-    glassBg: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(255,255,255,0.60) 100%)',
+    glassBg: 'linear-gradient(135deg, rgba(239, 68, 68, 0.06) 0%, rgba(255,255,255,0.60) 100%)',
     border: 'rgba(239, 68, 68, 0.22)',
     icon: <CloseCircleFilled style={{ fontSize: 18, color: '#EF4444' }} />,
     label: '已驳回',
     lineColor: '#EF4444',
+    badgeBg: '#EF4444',
+    badgeText: '#fff',
   },
   pending: {
     color: '#94A3B8',
@@ -59,6 +68,8 @@ const STATUS_THEME: Record<NodeStatus, {
     icon: <ClockCircleOutlined style={{ fontSize: 18, color: '#94A3B8' }} />,
     label: '未开始',
     lineColor: 'rgba(148, 163, 184, 0.20)',
+    badgeBg: '#E2E8F0',
+    badgeText: '#94A3B8',
   },
 };
 
@@ -66,12 +77,16 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
   const sortedNodes = [...nodes].sort((a, b) => a.sortOrder - b.sortOrder);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'stretch', gap: 0, overflowX: 'auto', padding: '4px 0' }}>
+    <div style={{ display: 'flex', alignItems: 'stretch', gap: 0, overflowX: 'auto', padding: '12px 0 4px' }}>
       {sortedNodes.map((node, idx) => {
         const theme = STATUS_THEME[node.nodeStatus];
         const clickable = node.nodeStatus !== 'pending';
         const isActive = activeNode === node.nodeType;
         const isPending = node.nodeStatus === 'pending';
+        const stepNumber = idx + 1;
+
+        const connectorSolid = node.nodeStatus === 'completed';
+        const connectorColor = connectorSolid ? '#10B981' : node.nodeStatus === 'processing' ? '#2563EB' : 'rgba(148, 163, 184, 0.25)';
 
         return (
           <React.Fragment key={node.nodeId}>
@@ -81,7 +96,7 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
                 flex: '1 1 0',
                 minWidth: 120,
                 maxWidth: 180,
-                padding: '12px 14px',
+                padding: '14px 14px 12px',
                 borderRadius: 10,
                 border: `1.5px solid ${isActive ? theme.color : theme.border}`,
                 background: theme.glassBg,
@@ -89,29 +104,56 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
                 WebkitBackdropFilter: 'blur(12px)',
                 cursor: clickable ? 'pointer' : 'default',
                 opacity: isPending ? 0.6 : 1,
-                transition: 'all 0.2s ease',
+                transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
                 position: 'relative',
                 boxShadow: isActive
                   ? `0 4px 16px ${theme.color}18`
                   : clickable
-                    ? '0 1px 6px rgba(15, 23, 42, 0.04)'
+                    ? 'var(--shadow-sm)'
                     : 'none',
+                ...(isActive ? {
+                  animation: 'glowPulse 2.5s ease-in-out infinite',
+                } : {}),
               }}
               onMouseEnter={(e) => {
                 if (clickable && !isActive) {
                   e.currentTarget.style.borderColor = theme.color;
                   e.currentTarget.style.boxShadow = `0 4px 16px ${theme.color}15`;
-                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (clickable && !isActive) {
                   e.currentTarget.style.borderColor = String(theme.border);
-                  e.currentTarget.style.boxShadow = '0 1px 6px rgba(15, 23, 42, 0.04)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
             >
+              {/* Step number badge */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: -8,
+                  left: -8,
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  background: theme.badgeBg,
+                  color: theme.badgeText,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  fontFamily: 'var(--font-mono)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+                  zIndex: 1,
+                }}
+              >
+                {stepNumber}
+              </div>
+
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                 {theme.icon}
                 <span
@@ -152,24 +194,29 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
               </div>
             </div>
 
+            {/* Connector */}
             {idx < sortedNodes.length - 1 && (
-              <div style={{ display: 'flex', alignItems: 'center', width: 32, minWidth: 32, justifyContent: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', width: 36, minWidth: 36, justifyContent: 'center', padding: '0 2px' }}>
                 <div
                   style={{
                     height: 2,
                     flex: 1,
-                    background: node.nodeStatus === 'completed' ? '#10B981' : 'rgba(148, 163, 184, 0.20)',
+                    background: connectorSolid
+                      ? `linear-gradient(90deg, ${connectorColor}, ${connectorColor})`
+                      : connectorColor,
                     borderRadius: 1,
+                    ...((!connectorSolid && isPending) ? {
+                      backgroundImage: `repeating-linear-gradient(90deg, rgba(148,163,184,0.25) 0px, rgba(148,163,184,0.25) 4px, transparent 4px, transparent 8px)`,
+                      backgroundColor: 'transparent',
+                    } : {}),
                   }}
                 />
-                <div
+                <RightOutlined
                   style={{
-                    width: 0,
-                    height: 0,
-                    borderTop: '5px solid transparent',
-                    borderBottom: '5px solid transparent',
-                    borderLeft: `6px solid ${node.nodeStatus === 'completed' ? '#10B981' : 'rgba(148, 163, 184, 0.20)'}`,
+                    fontSize: 10,
+                    color: connectorColor,
                     flexShrink: 0,
+                    marginLeft: -2,
                   }}
                 />
               </div>
