@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Radio, Input, Button, Tag, Space, Typography, Select, message } from 'antd';
+import { Card, Radio, Input, Button, Tag, Space, Typography, Select, message, Avatar } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import type { ReviewFormData, ReviewRecord } from '../../../types/node';
 
@@ -94,21 +94,33 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <Tag
-                        icon={
-                          status === 'approved' ? <CheckCircleOutlined /> :
-                          status === 'rejected' ? <CloseCircleOutlined /> :
-                          <ClockCircleOutlined />
-                        }
-                        color={
-                          status === 'approved' ? 'success' :
-                          status === 'rejected' ? 'error' :
-                          'default'
-                        }
-                      >
-                        {r.name}
-                        {status === 'approved' ? ' 已通过' : status === 'rejected' ? ' 已拒绝' : ' 待审核'}
-                      </Tag>
+                      <Space size={8}>
+                        <Avatar
+                          size={24}
+                          style={{
+                            backgroundColor: status === 'approved' ? '#10B981' : status === 'rejected' ? '#EF4444' : '#94A3B8',
+                            fontSize: 12,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {r.name[0]}
+                        </Avatar>
+                        <Tag
+                          icon={
+                            status === 'approved' ? <CheckCircleOutlined /> :
+                            status === 'rejected' ? <CloseCircleOutlined /> :
+                            <ClockCircleOutlined />
+                          }
+                          color={
+                            status === 'approved' ? 'success' :
+                            status === 'rejected' ? 'error' :
+                            'default'
+                          }
+                        >
+                          {r.name}
+                          {status === 'approved' ? ' 已通过' : status === 'rejected' ? ' 已拒绝' : ' 待审核'}
+                        </Tag>
+                      </Space>
                       {record?.reviewTime && (
                         <Text type="secondary" style={{ fontSize: 12 }}>{record.reviewTime}</Text>
                       )}
@@ -129,8 +141,32 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
         <div style={{ marginBottom: 12 }}>
           <Text strong style={{ marginRight: 12 }}>审核结果：</Text>
           <Radio.Group value={result} onChange={(e) => setResult(e.target.value)} disabled={disabled}>
-            <Radio value="approved">通过</Radio>
-            <Radio value="rejected">不通过</Radio>
+            <Radio.Button
+              value="approved"
+              style={{
+                borderRadius: '16px 0 0 16px',
+                ...(result === 'approved' ? {
+                  background: 'rgba(16, 185, 129, 0.10)',
+                  borderColor: '#10B981',
+                  color: '#10B981',
+                } : {}),
+              }}
+            >
+              通过
+            </Radio.Button>
+            <Radio.Button
+              value="rejected"
+              style={{
+                borderRadius: '0 16px 16px 0',
+                ...(result === 'rejected' ? {
+                  background: 'rgba(239, 68, 68, 0.10)',
+                  borderColor: '#EF4444',
+                  color: '#EF4444',
+                } : {}),
+              }}
+            >
+              不通过
+            </Radio.Button>
           </Radio.Group>
         </div>
 
@@ -167,7 +203,21 @@ const StickyReviewPanel: React.FC<StickyReviewPanelProps> = ({
           />
         </div>
 
-        <Button type="primary" onClick={handleSubmit} disabled={disabled || !result}>
+        <Button
+          type="primary"
+          onClick={handleSubmit}
+          disabled={disabled || !result}
+          block
+          style={{
+            height: 40,
+            borderRadius: 10,
+            fontWeight: 500,
+            fontSize: 14,
+            ...((!disabled && result) ? {
+              boxShadow: '0 0 16px rgba(37, 99, 235, 0.20), 0 2px 8px rgba(37, 99, 235, 0.25)',
+            } : {}),
+          }}
+        >
           提交审核
         </Button>
       </Card>
