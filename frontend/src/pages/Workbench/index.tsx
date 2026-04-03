@@ -223,8 +223,23 @@ const Workbench: React.FC = () => {
   return (
     <Layout style={{ background: 'transparent', borderRadius: 16, minHeight: 'calc(100vh - 104px)' }}>
       <Content style={{ padding: 24 }} className="glass-card-static">
+        {/* Page header */}
+        <div style={{ marginBottom: 20 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 600, color: '#0F172A', margin: 0, letterSpacing: '-0.3px' }}>工作台</h2>
+          <span style={{ fontSize: 13, color: '#64748B', marginTop: 4, display: 'block' }}>
+            共 {flowTotal} 个班车
+          </span>
+        </div>
+
         {/* 工具栏 */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12,
+          padding: 16, borderRadius: 12,
+          background: 'rgba(255, 255, 255, 0.45)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+        }}>
           <Space wrap size={12}>
             <Input
               placeholder="班车名称"
@@ -440,6 +455,18 @@ const Workbench: React.FC = () => {
             }}
           >
             <Badge count={todoTotal} style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }} />
+            {todoTotal > 0 && (
+              <div
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: '#2563EB',
+                  marginTop: 8,
+                  animation: 'dotPulse 2s ease-in-out infinite',
+                }}
+              />
+            )}
             <div
               style={{
                 writingMode: 'vertical-rl',
@@ -455,15 +482,18 @@ const Workbench: React.FC = () => {
           </div>
         ) : (
           <div style={{ padding: 16 }}>
-            <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>待办事项</span>
-              <Space size={8}>
-                <Badge count={todoTotal} style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }} />
-                <span
-                  onClick={() => setTodoCollapsed(true)}
-                  style={{ cursor: 'pointer', fontSize: 12, color: '#999' }}
-                >▶</span>
-              </Space>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 10 }}>
+                <span style={{ fontSize: 16, fontWeight: 600, color: '#0F172A' }}>待办事项</span>
+                <Space size={8}>
+                  <Badge count={todoTotal} style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }} />
+                  <span
+                    onClick={() => setTodoCollapsed(true)}
+                    style={{ cursor: 'pointer', fontSize: 12, color: '#999' }}
+                  >▶</span>
+                </Space>
+              </div>
+              <div style={{ height: 1.5, background: 'linear-gradient(90deg, #2563EB 0%, #06B6D4 40%, transparent 100%)', borderRadius: 1 }} />
             </div>
 
             <Input
