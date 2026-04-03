@@ -38,9 +38,16 @@ const TodoCard: React.FC<TodoCardProps> = ({ todoInfo, onHandle }) => {
         borderLeftWidth: 3,
         borderLeftColor: statusColor,
         boxShadow: '0 4px 16px rgba(15, 23, 42, 0.04)',
-        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
       }}
-      hoverable
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'scale(1.01)';
+        e.currentTarget.style.boxShadow = `inset 3px 0 8px ${statusColor}20, 0 4px 16px rgba(15, 23, 42, 0.06)`;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'scale(1)';
+        e.currentTarget.style.boxShadow = '0 4px 16px rgba(15, 23, 42, 0.04)';
+      }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
         <span style={{ fontSize: 12, color: '#6B7280', fontWeight: 400 }}>{todoInfo.shuttleName}</span>
@@ -70,14 +77,36 @@ const TodoCard: React.FC<TodoCardProps> = ({ todoInfo, onHandle }) => {
         />
       )}
       <div style={{ textAlign: 'right' }}>
-        <Button
-          type="link"
-          size="small"
+        <span
           onClick={() => onHandle(todoInfo)}
-          style={{ color: '#2563EB', fontWeight: 500 }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
+            padding: '4px 14px',
+            borderRadius: 16,
+            background: 'rgba(37, 99, 235, 0.06)',
+            color: '#2563EB',
+            fontSize: 12,
+            fontWeight: 500,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            border: '1px solid rgba(37, 99, 235, 0.12)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(37, 99, 235, 0.12)';
+            const arrow = e.currentTarget.querySelector('.todo-arrow') as HTMLElement;
+            if (arrow) arrow.style.transform = 'translateX(3px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(37, 99, 235, 0.06)';
+            const arrow = e.currentTarget.querySelector('.todo-arrow') as HTMLElement;
+            if (arrow) arrow.style.transform = 'translateX(0)';
+          }}
         >
-          去处理 <RightOutlined />
-        </Button>
+          去处理
+          <RightOutlined className="todo-arrow" style={{ fontSize: 10, transition: 'transform 0.2s ease' }} />
+        </span>
       </div>
     </Card>
   );
