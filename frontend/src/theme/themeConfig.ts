@@ -56,8 +56,8 @@ const themeConfig: ThemeConfig = {
   components: {
     Layout: {
       headerBg: 'transparent',
-      headerHeight: 60,
-      headerPadding: '0 28px',
+      headerHeight: 64,
+      headerPadding: '0 32px',
       bodyBg: 'transparent',
     },
     Menu: {
@@ -74,12 +74,12 @@ const themeConfig: ThemeConfig = {
       headerColor: '#1E293B',
     },
     Card: {
-      paddingLG: 20,
+      paddingLG: 24,
       borderRadiusLG: 12,
     },
     Modal: {
       paddingContentHorizontalLG: 28,
-      borderRadiusLG: 14,
+      borderRadiusLG: 16,
     },
     Input: {
       borderRadius: 8,
