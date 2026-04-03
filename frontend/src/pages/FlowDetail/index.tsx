@@ -4,7 +4,7 @@ import {
   Descriptions, Card, Row, Col, Button, Input, Pagination, Modal,
   Checkbox, Spin, Tag, Empty, Space, Breadcrumb, message, Tooltip,
 } from 'antd';
-import { PlusOutlined, SearchOutlined, HomeOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { PlusOutlined, SearchOutlined, HomeOutlined, AppstoreOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import StatusTag from '../../components/StatusTag';
 import { useFlowStore } from '../../stores/flowStore';
@@ -80,17 +80,27 @@ const FlowDetail: React.FC = () => {
   return (
     <div>
       {/* 面包屑 */}
-      <Breadcrumb
-        style={{ marginBottom: 16 }}
-        items={[
-          { title: <span style={{ cursor: 'pointer' }} onClick={() => navigate('/workbench')}><HomeOutlined /> 工作台</span> },
-          { title: '流程单详情' },
-        ]}
-      />
+      <div style={{
+        display: 'inline-flex',
+        padding: '6px 16px',
+        borderRadius: 20,
+        background: 'rgba(255,255,255,0.5)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255,255,255,0.4)',
+        marginBottom: 16,
+      }}>
+        <Breadcrumb
+          items={[
+            { title: <span style={{ cursor: 'pointer', color: '#2563EB' }} onClick={() => navigate('/workbench')}><HomeOutlined /> 工作台</span> },
+            { title: '流程单详情' },
+          ]}
+        />
+      </div>
 
       {/* 基础信息 */}
       <Card style={{ marginBottom: 24 }}>
-        <Descriptions title="基础信息" column={4}>
+        <Descriptions title={<span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2563EB', flexShrink: 0 }} />基础信息</span>} column={4}>
           <Descriptions.Item label="班车名称">{currentFlow?.name}</Descriptions.Item>
           <Descriptions.Item label="APK 状态">
             {currentFlow && (
@@ -160,11 +170,20 @@ const FlowDetail: React.FC = () => {
                         border: '1px solid rgba(255, 255, 255, 0.35)',
                         borderLeft: `3px solid ${statusColor}`,
                         overflow: 'hidden',
+                        transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-3px)';
+                        e.currentTarget.style.boxShadow = `0 0 16px ${statusColor}20, var(--shadow-md)`;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '';
                       }}
                     >
                       {/* Header: icon + name */}
                       <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
-                        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'rgba(37, 99, 235, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
                           {app.appIcon ? <img src={app.appIcon} alt="" style={{ width: 44, height: 44, borderRadius: 10 }} /> : <AppstoreOutlined style={{ color: '#2563EB' }} />}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
@@ -208,9 +227,12 @@ const FlowDetail: React.FC = () => {
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 4,
                             }}
                           >
-                            {app.rejectReason}
+                            <ExclamationCircleOutlined style={{ fontSize: 11, flexShrink: 0 }} />{app.rejectReason}
                           </div>
                         )}
                       </div>
