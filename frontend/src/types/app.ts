@@ -40,7 +40,8 @@ export interface AvailableApp {
 export interface AppVersion {
   versionCode: string;
   versionName: string;
-  apkUrl: string;
+  apkUrl?: string;
+  apkFileName?: string;
   apkSize: number;
   buildTime: string;
   isUsedInCurrentFlow?: boolean;
