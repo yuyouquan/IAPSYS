@@ -138,13 +138,13 @@ const Workbench: React.FC = () => {
     {
       title: '应用状态',
       key: 'statusSummary',
-      width: 280,
+      width: 200,
       render: (_, record) => (
         <Space size={4}>
-          <StatusTag status="total" count={record.statusSummary.total} onClick={() => navigate(`/workbench/flow/${record.id}?status=all`)} />
-          <StatusTag status="success" count={record.statusSummary.success} onClick={() => navigate(`/workbench/flow/${record.id}?status=success`)} />
-          <StatusTag status="processing" count={record.statusSummary.processing} onClick={() => navigate(`/workbench/flow/${record.id}?status=processing`)} />
-          <StatusTag status="rejected" count={record.statusSummary.rejected} onClick={() => navigate(`/workbench/flow/${record.id}?status=rejected`)} />
+          <StatusTag status="total" count={record.statusSummary.total} compact onClick={() => navigate(`/workbench/flow/${record.id}?status=all`)} />
+          <StatusTag status="success" count={record.statusSummary.success} compact onClick={() => navigate(`/workbench/flow/${record.id}?status=success`)} />
+          <StatusTag status="processing" count={record.statusSummary.processing} compact onClick={() => navigate(`/workbench/flow/${record.id}?status=processing`)} />
+          <StatusTag status="rejected" count={record.statusSummary.rejected} compact onClick={() => navigate(`/workbench/flow/${record.id}?status=rejected`)} />
         </Space>
       ),
     },
@@ -224,21 +224,27 @@ const Workbench: React.FC = () => {
     <Layout style={{ background: 'transparent', borderRadius: 16, minHeight: 'calc(100vh - 104px)' }}>
       <Content style={{ padding: 24 }} className="glass-card-static">
         {/* Page header */}
-        <div style={{ marginBottom: 20 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 600, color: '#0F172A', margin: 0, letterSpacing: '-0.3px' }}>工作台</h2>
-          <span style={{ fontSize: 13, color: '#64748B', marginTop: 4, display: 'block' }}>
-            共 {flowTotal} 个班车
-          </span>
+        <div style={{ marginBottom: 24 }} className="fade-in-up">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+            <h2 className="page-title" style={{ margin: 0 }}>工作台</h2>
+            <span style={{
+              fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-mono)',
+              padding: '3px 10px', borderRadius: 20,
+              background: 'linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(6,182,212,0.08) 100%)',
+              color: '#2563EB', border: '1px solid rgba(37,99,235,0.12)',
+            }}>
+              {flowTotal} 班车
+            </span>
+          </div>
+          <p style={{ fontSize: 13, color: '#64748B', margin: 0 }}>
+            管理发布班车、跟踪应用发布进度
+          </p>
+          <div className="accent-divider" style={{ marginTop: 12, maxWidth: 120 }} />
         </div>
 
         {/* 工具栏 */}
-        <div style={{
+        <div className="glass-toolbar fade-in-up fade-in-up-delay-1" style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12,
-          padding: 16, borderRadius: 12,
-          background: 'rgba(255, 255, 255, 0.45)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.3)',
         }}>
           <Space wrap size={12}>
             <Input
@@ -484,7 +490,12 @@ const Workbench: React.FC = () => {
           <div style={{ padding: 16 }}>
             <div style={{ marginBottom: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 10 }}>
-                <span style={{ fontSize: 16, fontWeight: 600, color: '#0F172A' }}>待办事项</span>
+                <span style={{
+                  fontSize: 16, fontWeight: 700, color: '#0F172A', letterSpacing: '-0.3px',
+                  background: 'linear-gradient(135deg, #0F172A 0%, #1E40AF 100%)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>待办事项</span>
                 <Space size={8}>
                   <Badge count={todoTotal} style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)' }} />
                   <span

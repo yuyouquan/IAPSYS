@@ -80,51 +80,69 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
+      {/* Page header */}
+      <div style={{ marginBottom: 24 }} className="fade-in-up">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+          <h2 className="page-title" style={{ margin: 0 }}>数据看板</h2>
+        </div>
+        <p style={{ fontSize: 13, color: '#64748B', margin: 0 }}>
+          多维度查看发布进度与产品状态
+        </p>
+        <div className="accent-divider" style={{ marginTop: 12, maxWidth: 120 }} />
+      </div>
+
       {/* Overview stats row */}
-      <Row gutter={16} style={{ marginBottom: 20 }}>
-        {STAT_CARDS.map((stat) => (
+      <Row gutter={16} style={{ marginBottom: 24 }}>
+        {STAT_CARDS.map((stat, idx) => (
           <Col key={stat.label} xs={12} md={6}>
             <div
+              className={`fade-in-up fade-in-up-delay-${idx % 4}`}
               style={{
-                padding: '16px 20px',
-                borderRadius: 12,
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.72) 0%, rgba(248,250,252,0.55) 100%)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255,255,255,0.35)',
+                padding: '18px 20px',
+                borderRadius: 14,
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.78) 0%, rgba(248,250,252,0.60) 100%)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255,255,255,0.4)',
+                borderLeft: `3px solid ${stat.color}`,
                 boxShadow: 'var(--shadow-sm)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 14,
-                transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
+                gap: 16,
+                transition: 'all 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
+                position: 'relative' as const,
+                overflow: 'hidden',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = `0 0 20px ${stat.color}18, var(--shadow-md)`;
+                e.currentTarget.style.borderLeftWidth = '4px';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                e.currentTarget.style.borderLeftWidth = '3px';
               }}
             >
               <div
                 style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 10,
-                  background: `radial-gradient(circle, ${stat.color}15 0%, ${stat.color}08 100%)`,
+                  width: 44,
+                  height: 44,
+                  borderRadius: 12,
+                  background: `linear-gradient(135deg, ${stat.color}18 0%, ${stat.color}08 100%)`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: 18,
+                  fontSize: 20,
                   color: stat.color,
+                  boxShadow: `0 0 0 4px ${stat.color}08`,
                 }}
               >
                 {stat.icon}
               </div>
               <div>
-                <div style={{ fontSize: 12, color: '#64748B', marginBottom: 2 }}>{stat.label}</div>
-                <div style={{ fontSize: 22, fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#0F172A', letterSpacing: '-0.5px' }}>
+                <div style={{ fontSize: 11, color: '#94A3B8', marginBottom: 2, fontWeight: 500, textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>{stat.label}</div>
+                <div style={{ fontSize: 26, fontWeight: 800, fontFamily: 'var(--font-mono)', color: '#0F172A', letterSpacing: '-0.5px', lineHeight: 1 }}>
                   {stat.value}
                 </div>
               </div>
@@ -216,9 +234,10 @@ const Dashboard: React.FC = () => {
                         }}
                       >
                         <div style={{
-                          width: 48, height: 48, borderRadius: 12, margin: '0 auto 12px',
+                          width: 52, height: 52, borderRadius: 14, margin: '0 auto 12px',
                           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24,
-                          background: 'radial-gradient(circle, rgba(37,99,235,0.10) 0%, rgba(37,99,235,0.02) 100%)',
+                          background: 'linear-gradient(135deg, rgba(37,99,235,0.10) 0%, rgba(6,182,212,0.06) 100%)',
+                          boxShadow: '0 0 0 4px rgba(37,99,235,0.06), 0 0 0 8px rgba(37,99,235,0.02)',
                         }}>
                           <AppstoreOutlined style={{ color: '#2563EB' }} />
                         </div>

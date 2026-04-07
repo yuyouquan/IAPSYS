@@ -80,15 +80,16 @@ const FlowDetail: React.FC = () => {
   return (
     <div>
       {/* 面包屑 */}
-      <div style={{
+      <div className="fade-in-up" style={{
         display: 'inline-flex',
-        padding: '6px 16px',
-        borderRadius: 20,
-        background: 'rgba(255,255,255,0.5)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255,255,255,0.4)',
-        marginBottom: 16,
+        padding: '7px 18px',
+        borderRadius: 24,
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.65) 0%, rgba(241,245,249,0.55) 100%)',
+        backdropFilter: 'blur(16px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+        border: '1px solid rgba(255,255,255,0.5)',
+        boxShadow: 'var(--shadow-sm)',
+        marginBottom: 20,
       }}>
         <Breadcrumb
           items={[
@@ -100,15 +101,15 @@ const FlowDetail: React.FC = () => {
 
       {/* 基础信息 */}
       <Card style={{ marginBottom: 24 }}>
-        <Descriptions title={<span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2563EB', flexShrink: 0 }} />基础信息</span>} column={4}>
+        <Descriptions title={<span style={{ display: 'flex', alignItems: 'center', gap: 10 }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: 'linear-gradient(135deg, #2563EB, #06B6D4)', flexShrink: 0, boxShadow: '0 0 8px rgba(37,99,235,0.3)' }} />基础信息</span>} column={4}>
           <Descriptions.Item label="班车名称">{currentFlow?.name}</Descriptions.Item>
-          <Descriptions.Item label="APK 状态">
+          <Descriptions.Item label="应用状态">
             {currentFlow && (
               <Space size={4}>
-                <StatusTag status="total" count={currentFlow.statusSummary.total} />
-                <StatusTag status="success" count={currentFlow.statusSummary.success} />
-                <StatusTag status="processing" count={currentFlow.statusSummary.processing} />
-                <StatusTag status="rejected" count={currentFlow.statusSummary.rejected} />
+                <StatusTag status="total" count={currentFlow.statusSummary.total} compact />
+                <StatusTag status="success" count={currentFlow.statusSummary.success} compact />
+                <StatusTag status="processing" count={currentFlow.statusSummary.processing} compact />
+                <StatusTag status="rejected" count={currentFlow.statusSummary.rejected} compact />
               </Space>
             )}
           </Descriptions.Item>
@@ -129,7 +130,7 @@ const FlowDetail: React.FC = () => {
 
       {/* 应用卡片列表 */}
       <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <div className="glass-toolbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <Space>
             <Input
               placeholder="搜索应用名称/包名"
@@ -183,7 +184,7 @@ const FlowDetail: React.FC = () => {
                     >
                       {/* Header: icon + name */}
                       <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
-                        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(6,182,212,0.04) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0, boxShadow: '0 0 0 3px rgba(37,99,235,0.05)' }}>
                           {app.appIcon ? <img src={app.appIcon} alt="" style={{ width: 44, height: 44, borderRadius: 10 }} /> : <AppstoreOutlined style={{ color: '#2563EB' }} />}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>

@@ -14,7 +14,7 @@ const themeConfig: ThemeConfig = {
     fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     fontFamilyCode: "'JetBrains Mono', 'SF Mono', Consolas, monospace",
     fontSize: 14,
-    fontSizeHeading1: 22,
+    fontSizeHeading1: 24,
     fontSizeHeading2: 18,
     fontSizeHeading3: 16,
     fontSizeHeading4: 14,
@@ -50,8 +50,8 @@ const themeConfig: ThemeConfig = {
     controlHeightSM: 28,
 
     // Shadows
-    boxShadow: '0 2px 12px rgba(15, 23, 42, 0.06)',
-    boxShadowSecondary: '0 8px 28px rgba(15, 23, 42, 0.09)',
+    boxShadow: '0 2px 12px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.03)',
+    boxShadowSecondary: '0 8px 32px rgba(15, 23, 42, 0.10), 0 2px 8px rgba(15, 23, 42, 0.04)',
   },
   components: {
     Layout: {
@@ -79,7 +79,7 @@ const themeConfig: ThemeConfig = {
     },
     Modal: {
       paddingContentHorizontalLG: 28,
-      borderRadiusLG: 16,
+      borderRadiusLG: 18,
     },
     Input: {
       borderRadius: 8,
@@ -92,7 +92,7 @@ const themeConfig: ThemeConfig = {
     },
     Button: {
       borderRadius: 8,
-      primaryShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+      primaryShadow: '0 2px 10px rgba(37, 99, 235, 0.30), 0 0 0 1px rgba(37, 99, 235, 0.05)',
     },
     Tag: {
       borderRadiusSM: 5,

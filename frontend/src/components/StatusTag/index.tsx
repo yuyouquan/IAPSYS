@@ -12,6 +12,7 @@ type StatusType = 'total' | 'success' | 'processing' | 'rejected';
 interface StatusTagProps {
   status: StatusType;
   count: number;
+  compact?: boolean;
   onClick?: () => void;
 }
 
@@ -22,7 +23,7 @@ const STATUS_ICON: Record<StatusType, React.ReactNode> = {
   rejected: <CloseOutlined style={{ fontSize: 9 }} />,
 };
 
-const StatusTag: React.FC<StatusTagProps> = ({ status, count, onClick }) => {
+const StatusTag: React.FC<StatusTagProps> = ({ status, count, compact, onClick }) => {
   const config = STATUS_TAG_CONFIG[status];
 
   return (
@@ -32,8 +33,8 @@ const StatusTag: React.FC<StatusTagProps> = ({ status, count, onClick }) => {
         display: 'inline-flex',
         alignItems: 'center',
         gap: 6,
-        padding: '4px 12px',
-        borderRadius: 8,
+        padding: '4px 14px',
+        borderRadius: 20,
         fontSize: 12,
         color: config.text,
         background: config.bg,
@@ -66,14 +67,15 @@ const StatusTag: React.FC<StatusTagProps> = ({ status, count, onClick }) => {
           width: 14,
           height: 14,
           borderRadius: '50%',
-          background: `${config.text}15`,
+          background: `${config.text}18`,
           color: config.text,
+          boxShadow: `0 0 6px ${config.text}12`,
         }}
       >
         {STATUS_ICON[status]}
       </span>
-      <span>{config.label}</span>
-      <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{count}</span>
+      {!compact && <span>{config.label}</span>}
+      <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '-0.02em' }}>{count}</span>
     </span>
   );
 };

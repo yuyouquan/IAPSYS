@@ -30,7 +30,7 @@ const STATUS_THEME: Record<NodeStatus, {
   completed: {
     color: '#10B981',
     bg: 'rgba(16, 185, 129, 0.07)',
-    glassBg: 'linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(255,255,255,0.60) 100%)',
+    glassBg: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(255,255,255,0.65) 50%, rgba(16, 185, 129, 0.03) 100%)',
     border: 'rgba(16, 185, 129, 0.22)',
     icon: <CheckCircleFilled style={{ fontSize: 18, color: '#10B981' }} />,
     label: '已完成',
@@ -41,7 +41,7 @@ const STATUS_THEME: Record<NodeStatus, {
   processing: {
     color: '#2563EB',
     bg: 'rgba(37, 99, 235, 0.07)',
-    glassBg: 'linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(255,255,255,0.60) 100%)',
+    glassBg: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(255,255,255,0.65) 50%, rgba(6, 182, 212, 0.04) 100%)',
     border: 'rgba(37, 99, 235, 0.25)',
     icon: <SyncOutlined spin style={{ fontSize: 18, color: '#2563EB' }} />,
     label: '进行中',
@@ -52,7 +52,7 @@ const STATUS_THEME: Record<NodeStatus, {
   rejected: {
     color: '#EF4444',
     bg: 'rgba(239, 68, 68, 0.07)',
-    glassBg: 'linear-gradient(135deg, rgba(239, 68, 68, 0.06) 0%, rgba(255,255,255,0.60) 100%)',
+    glassBg: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(255,255,255,0.65) 50%, rgba(239, 68, 68, 0.03) 100%)',
     border: 'rgba(239, 68, 68, 0.22)',
     icon: <CloseCircleFilled style={{ fontSize: 18, color: '#EF4444' }} />,
     label: '已驳回',
@@ -77,7 +77,7 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
   const sortedNodes = [...nodes].sort((a, b) => a.sortOrder - b.sortOrder);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'stretch', gap: 0, overflowX: 'auto', padding: '12px 0 4px' }}>
+    <div style={{ display: 'flex', alignItems: 'stretch', gap: 0, overflowX: 'auto', padding: '12px 0 4px 10px' }}>
       {sortedNodes.map((node, idx) => {
         const theme = STATUS_THEME[node.nodeStatus];
         const clickable = node.nodeStatus !== 'pending';
@@ -107,7 +107,7 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
                 transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
                 position: 'relative',
                 boxShadow: isActive
-                  ? `0 4px 16px ${theme.color}18`
+                  ? `0 4px 20px ${theme.color}22, 0 0 0 1px ${theme.color}15`
                   : clickable
                     ? 'var(--shadow-sm)'
                     : 'none',
@@ -147,7 +147,7 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+                  boxShadow: `0 2px 6px rgba(0,0,0,0.12), 0 0 0 2px ${theme.badgeBg}20`,
                   zIndex: 1,
                 }}
               >
@@ -199,10 +199,10 @@ const ProcessSteps: React.FC<ProcessStepsProps> = ({ nodes, activeNode, onNodeCl
               <div style={{ display: 'flex', alignItems: 'center', width: 36, minWidth: 36, justifyContent: 'center', padding: '0 2px' }}>
                 <div
                   style={{
-                    height: 2,
+                    height: 2.5,
                     flex: 1,
                     background: connectorSolid
-                      ? `linear-gradient(90deg, ${connectorColor}, ${connectorColor})`
+                      ? `linear-gradient(90deg, ${connectorColor}, #06B6D4)`
                       : connectorColor,
                     borderRadius: 1,
                     ...((!connectorSolid && isPending) ? {

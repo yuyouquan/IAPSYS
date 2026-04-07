@@ -63,7 +63,7 @@ const TodoCard: React.FC<TodoCardProps> = ({ todoInfo, onHandle }) => {
           {todoInfo.currentNodeName}
         </Tag>
       </div>
-      <div style={{ fontWeight: 600, marginBottom: 4, color: '#0F172A' }}>{todoInfo.appName}</div>
+      <div style={{ fontWeight: 700, marginBottom: 4, color: '#0F172A', fontSize: 14, letterSpacing: '-0.2px' }}>{todoInfo.appName}</div>
       <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 8 }}>
         处理人：{todoInfo.handler}
       </div>
@@ -83,15 +83,16 @@ const TodoCard: React.FC<TodoCardProps> = ({ todoInfo, onHandle }) => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 4,
-            padding: '4px 14px',
-            borderRadius: 16,
-            background: 'rgba(37, 99, 235, 0.06)',
+            padding: '5px 16px',
+            borderRadius: 20,
+            background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(6, 182, 212, 0.06) 100%)',
             color: '#2563EB',
             fontSize: 12,
-            fontWeight: 500,
+            fontWeight: 600,
             cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            border: '1px solid rgba(37, 99, 235, 0.12)',
+            transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
+            border: '1px solid rgba(37, 99, 235, 0.15)',
+            letterSpacing: '0.02em',
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = 'rgba(37, 99, 235, 0.12)';
